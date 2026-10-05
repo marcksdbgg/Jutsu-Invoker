@@ -39,15 +39,41 @@ function pendingSpell(pending) {
   return recipes.find(r=>r.orbs.split('').sort().join('')===key);
 }
 
+// Show accepted selectors only; candidates never enter the broadcast strip.
+const streamOrbs={Q:'quas',W:'wex',E:'exort'};
+const streamSpells={
+  'Cold Snap':'cold_snap','Ghost Walk':'ghost_walk','Ice Wall':'ice_wall',
+  'EMP':'emp','Tornado':'tornado','Alacrity':'alacrity','Sun Strike':'sun_strike',
+  'Forge Spirit':'forge_spirit','Chaos Meteor':'chaos_meteor','Deafening Blast':'deafening_blast'
+};
+let streamIconsSignature=null;
+function renderStreamIcons(data){
+  const pending=data.pending||[];
+  const latest=(data.events||[]).filter(e=>['accepted','recipe','cancelled'].includes(e.type)).at(-1);
+  const confirmed=!pending.length && (!latest||latest.type==='recipe') ? data.last_recipe : null;
+  const orbs=confirmed ? [...confirmed.orbs] : pending;
+  const icons=orbs.filter(orb=>streamOrbs[orb]).map(orb=>({asset:streamOrbs[orb],label:{Q:'Quas',W:'Wex',E:'Exort'}[orb]}));
+  if(confirmed&&streamSpells[confirmed.spell])icons.push({asset:streamSpells[confirmed.spell],label:confirmed.spell,spell:true});
+  if(data.status!=='running')icons.length=0;
+  const signature=JSON.stringify(icons);
+  if(signature===streamIconsSignature)return;
+  streamIconsSignature=signature;
+  const strip=el('stream-badge');strip.replaceChildren();strip.hidden=!icons.length;
+  strip.dataset.phase=confirmed?'confirmed':'building';
+  for(const icon of icons){
+    const image=document.createElement('span');
+    image.className='stream-icon icon-'+icon.asset+(icon.spell?' stream-spell':'');
+    image.setAttribute('role','img');image.setAttribute('aria-label',icon.label);
+    image.title=icon.label;strip.append(image);
+  }
+}
+
 function render(data) {
   const audioEvents=[...(data.events||[]),...(data.dota?.cast_events||[])];
   if(!soundStateSeen){sealSound.cursor.consume(audioEvents,Infinity);soundStateSeen=true;}
   else sealSound.consume(audioEvents,data.server_monotonic_ms,!!data.dota?.armed);
   state = data;
-  if(streamOverlay){
-    const badge=el('stream-badge');
-    badge.textContent=data.pending?.length ? data.pending.join(' · ') : data.last_recipe?.spell || 'Jutsu Invoker';
-  }
+  if(streamOverlay)renderStreamIcons(data);
   renderSettings(data);
   reasons.recipe_timeout='Pasaron '+(data.settings?.timeout_ms/1000||data.thresholds?.timeout_ms/1000||1.6)+' s sin reconocer un elemento guardado ni aceptar uno nuevo. Empieza otra receta.';
   el('evaluation-note').textContent='Mantén cada sello hasta ver su letra. Tienes '+(data.settings?.timeout_ms/1000||1.6)+' s para cambiar de pose sin evidencia del elemento guardado. Serpiente confirma con '+(data.thresholds?.confirmation_observations||4)+' imágenes claras y al menos '+(data.thresholds?.confirmation_stable_ms||90)+' ms. 3,5 s para preparar cada intento. Los datos quedan en este PC.';

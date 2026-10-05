@@ -124,7 +124,7 @@ Los clips de audio se preparan localmente y no se incluyen en Git. [Procedencia 
 
 Arranca el entrenador con `scripts/run_trainer.sh --camera back --dota`. En Chrome activa el sonido y la invocación. Los controles y el bloqueo del chat siguen siendo los mismos.
 
-En OBS añade una **Fuente de navegador** con `http://127.0.0.1:32147/?overlay=1`, tamaño 1280×720 y 30 FPS. Este modo muestra solo la cámara, las articulaciones y la receta; activa los efectos en el navegador de OBS. Marca **Controlar audio a través de OBS** y deja la monitorización desactivada: Chrome proporciona el feedback local del jugador y OBS lo incorpora al directo una sola vez. Puedes reducir el volumen de esa fuente desde el mezclador, sin cambiar el del jugador.
+En OBS añade una **Fuente de navegador** con `http://127.0.0.1:32147/?overlay=1`, tamaño 1280×720 y 30 FPS. Este modo muestra solo la cámara, las articulaciones y una fila de iconos oficiales: cada sello aceptado añade su orbe y serpiente muestra la fórmula completa con el hechizo al final. No muestra candidatas ni texto sobre la cámara; una cancelación limpia la fila. Las imágenes están incorporadas localmente. Activa los efectos en el navegador de OBS. Marca **Controlar audio a través de OBS** y deja la monitorización desactivada: Chrome proporciona el feedback local del jugador y OBS lo incorpora al directo una sola vez. Puedes reducir el volumen de esa fuente desde el mezclador, sin cambiar el del jugador.
 
 En Hyprland, utiliza **Captura de pantalla (PipeWire)** para el juego y selecciona Dota en el diálogo del escritorio. Si seleccionas un monitor, la captura muestra lo que aparezca en ese monitor. Sitúa la cámara encima del juego en una esquina, conservando visibles el minimapa y las habilidades.
 

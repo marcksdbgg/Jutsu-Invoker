@@ -12,3 +12,7 @@ El código del proyecto, los pesos descargados y los recursos multimedia tienen 
 | Láminas de referencia | `referencias/sellos-naruto.png`, `referencias/hechizos-invoker.png` | Material aportado para el diseño y diagnóstico; no se declara licencia abierta ni autoría del proyecto sobre él. |
 
 Naruto y Dota 2 pertenecen a sus respectivos titulares. El proyecto es una integración independiente.
+
+## Iconos de habilidades de Dota 2
+
+El overlay incluye trece PNG oficiales de Valve incorporados sin modificar para uso local en la emisión. [Fuentes y hashes](referencias/ICONOS-DOTA.md). Estos recursos no quedan cubiertos por la licencia del código del proyecto.
