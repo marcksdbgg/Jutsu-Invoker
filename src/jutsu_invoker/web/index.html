@@ -52,13 +52,15 @@
           <label>Estabilidad de mono · ms<input type="number" data-setting="monkey_stable_ms" min="50" max="1000" step="10" required><small>Menos tiempo permite empezar Quas más rápido.</small></label>
           <label>Confianza de mono · 0 a 1<input type="number" data-setting="monkey_score" min="0.6" max="0.99" step="0.01" required><small>Un valor menor acepta imágenes menos claras.</small></label>
           <label>Estabilidad de tigre · ms<input type="number" data-setting="tiger_stable_ms" min="50" max="1000" step="10" required><small>Exige también cuatro imágenes frescas; 90 ms son unos 100 ms a 30 FPS.</small></label>
+          <label>Estabilidad de serpiente · ms<input type="number" data-setting="confirmation_stable_ms" min="66" max="1000" step="1" required><small>Cuatro imágenes claras; un bajón breve de confianza no obliga a empezar de cero.</small></label>
           <label>Suavizado del vídeo · ms<input type="number" data-setting="preview_buffer_ms" min="0" max="200" step="10" required><small>Un pequeño búfer suaviza los saltos; añade ese retraso al vídeo.</small></label>
         </div>
         <details class="advanced-settings"><summary>Más ajustes</summary><div class="settings-grid">
           <label>Estabilidad de caballo · ms<input type="number" data-setting="element_stable_ms" min="50" max="1000" step="10" required></label>
           <label>Confianza de caballo / serpiente<input type="number" data-setting="element_score" min="0.6" max="0.99" step="0.01" required></label>
           <label>Confianza de tigre<input type="number" data-setting="tiger_enter_score" min="0.6" max="0.99" step="0.01" required></label>
-          <label>Estabilidad serpiente · ms<input type="number" data-setting="confirmation_stable_ms" min="66" max="1000" step="1" required></label>
+          <label>Confianza para conservar serpiente<input type="number" data-setting="confirmation_hold_score" min="0.5" max="0.9" step="0.01" required><small>Solo conserva una candidata; nunca acepta una imagen débil.</small></label>
+          <label>Bajón breve de serpiente · ms<input type="number" data-setting="confirmation_dropout_ms" min="0" max="100" step="1" required><small>Una sola imagen débil de la misma clase; 0 desactiva esta tolerancia.</small></label>
           <label>Margen entre clases<input type="number" data-setting="class_margin" min="0" max="0.5" step="0.01" required></label>
           <label>Imágenes mínimas de mono<input type="number" data-setting="monkey_observations" min="2" max="30" step="1" required></label>
           <label>Imágenes mínimas de caballo<input type="number" data-setting="element_observations" min="2" max="30" step="1" required></label>
@@ -89,7 +91,7 @@
         <button id="evaluation-confirm" hidden>Confirmo que hice los gestos pedidos</button>
       </div>
       <p id="eval-result" role="status"></p>
-      <p class="evaluation-note" id="evaluation-note">Mantén cada sello hasta que aparezca su letra. Puedes cambiar de pose sin borrar la receta; tienes 3 s desde la última detección válida. Serpiente confirma tras 200 ms estables. 3,5 s para preparar cada sello; después mantenlo durante la cuenta. Para recetas, sigue el dibujo de cada paso y termina con serpiente; haz una sola ejecución por intento. Marca los intentos que no realizaste. Vídeo y resultados se guardan en este PC.</p>
+      <p class="evaluation-note" id="evaluation-note">Mantén cada sello hasta que aparezca su letra. Puedes cambiar de pose sin borrar la receta; tienes 1,6 s desde la última detección válida. Serpiente exige cuatro imágenes claras y 90 ms. 3,5 s para preparar cada sello; después mantenlo durante la cuenta. Para recetas, sigue el dibujo de cada paso y termina con serpiente; haz una sola ejecución por intento. Marca los intentos que no realizaste. Vídeo y resultados se guardan en este PC.</p>
     </section>
     <details class="reference-panel"><summary>Ver cómo se hacen los sellos</summary><img src="/sellos-naruto.png" alt="Diagrama de sellos Naruto: caballo (Uma), mono (Saru), serpiente (Mi) y tigre (Tora), junto a otros ocho sellos"><p>Caballo: segundo de la fila central. Mono: tercero de esa fila. Serpiente y tigre: tercero y cuarto de la última fila.</p></details>
     <details class="capture-panel">

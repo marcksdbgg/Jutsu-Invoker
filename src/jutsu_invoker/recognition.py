@@ -37,6 +37,8 @@ class Thresholds:
     tiger_enter_score: float | None = None
     tiger_stable_ms: float | None = None
     tiger_observations: int | None = None
+    confirmation_hold_score: float | None = None
+    confirmation_dropout_ms: float = 0
 
     def score_for(self, sign):
         if sign == 'tiger' and self.tiger_enter_score is not None:
@@ -75,6 +77,8 @@ class Trainer:
         self.candidate: str | None = None
         self.candidate_start = 0.0
         self.candidate_count = 0
+        self.candidate_last_reliable_ms: float | None = None
+        self.candidate_weak_count = 0
 
     def cancel(self, reason: str = "manual_cancel") -> dict:
         self.pending.clear()
@@ -124,7 +128,20 @@ class Trainer:
         supported = observation.sign in (*TOKENS, "snake")
         reliable = supported and observation.score >= th.score_for(observation.sign) and observation.margin >= th.class_margin
         if not reliable:
-            self._clear_candidate()
+            # One weak SAME-class image may bridge a short snake confidence dip.
+            # It adds no evidence and cannot confirm; stale/unknown/other-class
+            # images and ambiguous margins still discard the candidate.
+            bridge = (observation.sign == self.candidate == 'snake' and bool(self.pending)
+                      and th.confirmation_hold_score is not None
+                      and observation.score >= th.confirmation_hold_score
+                      and observation.margin >= th.class_margin
+                      and self.candidate_weak_count == 0
+                      and self.candidate_last_reliable_ms is not None
+                      and t-self.candidate_last_reliable_ms <= th.confirmation_dropout_ms)
+            if bridge:
+                self.candidate_weak_count += 1
+            else:
+                self._clear_candidate()
             # Low-margin / low-score supported signs may just be tracking noise.
             # Only explicit unknown/transition/other signs can release a held sign.
             if not supported:
@@ -147,11 +164,15 @@ class Trainer:
         if observation.sign == self.latched:
             self._clear_candidate()
             return events
+        if self.candidate_weak_count and self.candidate_last_reliable_ms is not None and t-self.candidate_last_reliable_ms > th.confirmation_dropout_ms:
+            self._clear_candidate()
         if observation.sign != self.candidate:
+            self._clear_candidate()
             self.candidate = observation.sign
             self.candidate_start = t
             self.candidate_count = 0
         self.candidate_count += 1
+        self.candidate_last_reliable_ms = t
         confirm = observation.sign == "snake"
         duration, count = th.stability_for(observation.sign)
         if t - self.candidate_start < duration or self.candidate_count < count:

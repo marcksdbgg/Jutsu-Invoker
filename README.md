@@ -62,10 +62,12 @@ Los ajustes del panel persisten en `config/usuario.json`, que queda fuera de Git
 | Mono | Score ≥0,75; 100 ms y 4 imágenes frescas |
 | Tigre | Score ≥0,8; 90 ms y 4 imágenes frescas (~100 ms a 30 FPS) |
 | Caballo | Score ≥0,8; 150 ms y 5 imágenes frescas |
-| Serpiente | Score ≥0,8; 200 ms y 7 imágenes frescas |
+| Serpiente | Score ≥0,8; 90 ms y 4 imágenes claras (~100 ms a 30 FPS) |
 | Margen entre clases | 0,15 |
 | Frescura máxima de imagen | 100 ms |
 | Búfer de presentación del vídeo | 60 ms |
+
+Serpiente tolera una sola imagen débil de su misma clase (score ≥0,65 y margen válido) entre imágenes claras, con retorno a evidencia fiable en 75 ms. Esa imagen no cuenta ni confirma; desconocido, otra clase, ambigüedad o imágenes antiguas reinician la candidata. La estabilidad de serpiente está en los ajustes principales; su mínimo de imágenes y tolerancia se editan en **Más ajustes**.
 
 Tigre tiene confianza, estabilidad y mínimo de imágenes propios en el panel. El perfil rápido conserva score ≥0,8 y margen ≥0,15. En replay de 22 intentos etiquetados previos, los cuatro de tigre se aceptaron antes y no aparecieron nuevos tigres en los otros 18; esto es calibración retrospectiva, no precisión garantizada en una sesión nueva.
 
@@ -131,7 +133,7 @@ scripts/run_tests.sh
 .venv/bin/python scripts/preflight.py --output runtime/preflight.json
 ```
 
-La suite verificada contiene **122 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
+La suite verificada contiene **127 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
 
 En el panel, **Prueba de precisión** guía poses aisladas o las diez recetas. Los informes y grabaciones se guardan solo en `datos/evaluaciones/` y `datos/clips/`. Un informe es provisional hasta confirmar que se ejecutaron las poses, y necesita revisión del vídeo para una evaluación independiente.
 

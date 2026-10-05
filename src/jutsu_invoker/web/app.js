@@ -44,7 +44,7 @@ function render(data) {
   state = data;
   renderSettings(data);
   reasons.recipe_timeout='Pasaron '+(data.settings?.timeout_ms/1000||data.thresholds?.timeout_ms/1000||1.6)+' s sin reconocer un elemento guardado ni aceptar uno nuevo. Empieza otra receta.';
-  el('evaluation-note').textContent='Mantén cada sello hasta ver su letra. Tienes '+(data.settings?.timeout_ms/1000||1.6)+' s para cambiar de pose sin evidencia del elemento guardado. Serpiente confirma tras '+(data.thresholds?.confirmation_stable_ms||200)+' ms estables y su mínimo de imágenes. 3,5 s para preparar cada intento. Los datos quedan en este PC.';
+  el('evaluation-note').textContent='Mantén cada sello hasta ver su letra. Tienes '+(data.settings?.timeout_ms/1000||1.6)+' s para cambiar de pose sin evidencia del elemento guardado. Serpiente confirma con '+(data.thresholds?.confirmation_observations||4)+' imágenes claras y al menos '+(data.thresholds?.confirmation_stable_ms||90)+' ms. 3,5 s para preparar cada intento. Los datos quedan en este PC.';
   renderEvaluation(data.evaluation || {status:'idle'});
   renderDota(data.dota || {});
   el('connection').textContent = {running:'Cámara activa',starting:'Preparando cámara…',stopped:'Cámara detenida',error:'Conexión interrumpida'}[data.status] || 'Conectando…';

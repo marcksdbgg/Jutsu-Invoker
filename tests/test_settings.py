@@ -57,13 +57,13 @@ class SettingsTests(unittest.TestCase):
         self.assertEqual(trainer.pending,['Q'])
         events=trainer.update(Observation(1750,'unknown',0,0),1750)
         self.assertEqual(events[0]['reason'],'recipe_timeout');self.assertEqual(trainer.pending,[])
-    def test_tiger_accepts_four_clear_frames_without_shortening_horse_or_snake(self):
+    def test_tiger_and_snake_accept_four_clear_frames_without_shortening_horse(self):
         th=thresholds_from_config(BASE)
         for sign in ['tiger','horse','snake']:
             trainer=Trainer(ROOT/'diseno/mapa-recetas.json',th);trainer.pending=['Q'];events=[]
             for t in [0,33,66,99]:events.extend(trainer.update(Observation(t,sign,.9,.3),t))
             self.assertEqual(any(e['type']=='accepted' for e in events),sign=='tiger')
-            self.assertFalse(any(e['type']=='recipe' for e in events))
+            self.assertEqual(any(e['type']=='recipe' for e in events),sign=='snake')
     def test_tiger_still_requires_both_elapsed_time_and_four_distinct_images(self):
         th=thresholds_from_config(BASE)
         for timestamps in [[0,10,20,30,40],[0,45,90]]:

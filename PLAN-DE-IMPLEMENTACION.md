@@ -220,3 +220,8 @@ Se separó la aceptación de tigre de la de caballo. Tigre conserva score ≥0,8
 Replay de las mismas 22 pruebas medidas de poses/repose del 4 de octubre: cuatro intentos de tigre aceptados en ambos perfiles; cero aceptaciones W en los otros 18. Desde la primera evidencia fiable de tigre, los tiempos pasan de [825,06; 297,02; 165,01; 165,01] ms a [330,03; 231,02; 99,01; 99,01] ms. Son pruebas retrospectivas de la toma usada para calibrar, no una nueva medida de precisión ni latencia desde el sensor. Informe local no versionado: `runtime/tiger-latency-replay.json`.
 
 El refinamiento continúa exigiendo espejo y contexto independientes con score ≥0,85. Si el espejo falla, se omite la segunda inferencia, pues el acuerdo ya es imposible; no se altera la clasificación. No se atribuye una mejora de latencia GPU medida a este ahorro. La [guía primaria de MediaPipe](https://ai.google.dev/edge/api/mediapipe/python/mp/tasks/vision/GestureRecognizer) también describe el descarte de imágenes para reducir latencia en streaming; aquí se conserva el productor existente con una sola imagen pendiente y timestamps frescos, sin añadir otro modelo. Suite: 108 Python + 13 Node.
+
+
+### Ajuste vigente de serpiente · 2026-10-05
+
+El perfil vigente usa score ≥0,8, margen ≥0,15, 90 ms y cuatro imágenes claras para serpiente. Permite un solo bajón de su misma clase a score ≥0,65 con recuperación fiable en 75 ms, sin contar la imagen débil ni confirmar con ella. Los valores son configurables en el panel. Las cifras anteriores de 200 ms/siete imágenes describen el perfil histórico; la evidencia y sus límites están en [REVISION-Y-CALIBRACION.md](REVISION-Y-CALIBRACION.md).

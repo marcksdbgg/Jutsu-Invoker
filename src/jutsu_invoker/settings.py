@@ -20,6 +20,8 @@ FIELDS = {
     'element_observations': ('acceptance','element_min_fresh_observations',2,30,int),
     'confirmation_stable_ms': ('acceptance','confirmation_min_stable_ms',66,1000,int),
     'confirmation_observations': ('acceptance','confirmation_min_fresh_observations',3,30,int),
+    'confirmation_hold_score': ('acceptance','confirmation_hold_score',.5,.9,float),
+    'confirmation_dropout_ms': ('acceptance','confirmation_dropout_ms',0,100,int),
     'class_margin': ('acceptance','class_margin',0,.5,float),
     'release_ms': ('acceptance','release_min_ms',33,500,int),
     'max_age_ms': ('acceptance','max_observation_age_ms',50,250,int),

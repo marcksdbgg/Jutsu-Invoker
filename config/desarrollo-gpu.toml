@@ -94,9 +94,13 @@ tiger_enter_score = 0.8
 tiger_min_stable_ms = 90
 tiger_min_fresh_observations = 4
 element_min_stable_ms = 150
-confirmation_min_stable_ms = 200
+confirmation_min_stable_ms = 90
 element_min_fresh_observations = 5
-confirmation_min_fresh_observations = 7
+confirmation_min_fresh_observations = 4
+# Solo conserva la candidata ante una imagen débil de la MISMA clase; no cuenta
+# esa imagen y exige que la siguiente evidencia fiable llegue en <=75 ms.
+confirmation_hold_score = 0.65
+confirmation_dropout_ms = 75
 inter_sign_timeout_ms = 1600
 timeout_semantics = "inactivity_since_last_reliable_selected_pose"
 duplicate_selector_policy = "ignore_keep_recipe"

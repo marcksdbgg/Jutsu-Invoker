@@ -28,7 +28,9 @@ def thresholds_from_config(config: dict) -> Thresholds:
                       monkey_enter_score=a.get("monkey_enter_score"), monkey_stable_ms=a.get("monkey_min_stable_ms"),
                       monkey_observations=a.get("monkey_min_fresh_observations"),
                       tiger_enter_score=a.get("tiger_enter_score"), tiger_stable_ms=a.get("tiger_min_stable_ms"),
-                      tiger_observations=a.get("tiger_min_fresh_observations"))
+                      tiger_observations=a.get("tiger_min_fresh_observations"),
+                      confirmation_hold_score=a.get("confirmation_hold_score"),
+                      confirmation_dropout_ms=a.get("confirmation_dropout_ms",0))
 
 
 class VideoHub:

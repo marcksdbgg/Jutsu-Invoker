@@ -48,6 +48,61 @@ class RecognitionTests(unittest.TestCase):
         self.assertFalse(any(e["type"] == "recipe" for e in events))
         self.assertEqual(self.trainer.pending, ["E"])
 
+    def snake_profile(self):
+        self.trainer=Trainer(ROOT/'diseno/mapa-recetas.json',Thresholds(
+            confirmation_stable_ms=90,confirmation_observations=4,
+            confirmation_hold_score=.65,confirmation_dropout_ms=75))
+        self.hold('Q')
+
+    def test_snake_confirms_after_four_clear_frames_at_camera_cadence(self):
+        self.snake_profile()
+        events=[e for _ in range(3) for e in self.frame('R',dt=33)]
+        self.assertFalse(any(e['type']=='recipe' for e in events))
+        events=self.frame('R',dt=33)
+        self.assertEqual([e['spell'] for e in events if e['type']=='recipe'],['Cold Snap'])
+        self.assertFalse(any(e['type']=='recipe' for e in self.hold('R',20)))
+
+    def test_snake_bridges_one_weak_same_class_image_without_counting_it(self):
+        self.snake_profile()
+        self.frame('R',dt=33);self.frame('R',dt=33)
+        events=self.frame('R',dt=33,score=.7)
+        self.assertEqual(self.trainer.candidate_count,2)
+        self.assertFalse(any(e['type']=='recipe' for e in events))
+        self.assertFalse(any(e['type']=='recipe' for e in self.frame('R',dt=33)))
+        events=self.frame('R',dt=33)
+        self.assertEqual([e['spell'] for e in events if e['type']=='recipe'],['Cold Snap'])
+
+    def test_snake_weak_images_alone_never_confirm_or_refresh_timeout(self):
+        self.snake_profile();activity=self.trainer.last_activity_ms
+        self.frame('R',dt=33);self.frame('R',dt=33)
+        events=[e for _ in range(15) for e in self.frame('R',dt=33,score=.7)]
+        self.assertFalse(any(e['type']=='recipe' for e in events))
+        self.assertEqual(self.trainer.last_activity_ms,activity)
+        self.assertEqual(self.trainer.candidate_count,0)
+
+    def test_snake_dropout_rejects_second_weak_ambiguous_unknown_and_other_class(self):
+        for sign,score,margin in [('R',.6,.5),('R',.7,.1),('unknown',0,0),('W',.95,.5)]:
+            self.snake_profile();self.frame('R',dt=33);self.frame('R',dt=33)
+            self.frame(sign,dt=33,score=score,margin=margin)
+            events=self.frame('R',dt=33)+self.frame('R',dt=33)
+            self.assertFalse(any(e['type']=='recipe' for e in events))
+        self.snake_profile();self.frame('R',dt=33);self.frame('R',dt=33)
+        self.frame('R',dt=33,score=.7);self.frame('R',dt=33,score=.7)
+        self.assertEqual(self.trainer.candidate_count,0)
+
+    def test_snake_dropout_never_bridges_stale_duplicate_or_long_missing_images(self):
+        for mode in ['stale','duplicate','long_gap']:
+            self.snake_profile();self.frame('R',dt=33);self.frame('R',dt=33)
+            self.frame('R',dt=33,score=.7)
+            if mode=='stale':self.frame('R',dt=33,fresh_visual=False)
+            elif mode=='duplicate':
+                before=self.trainer.candidate_count
+                self.trainer.update(Observation(self.time,'snake',.95,.5),self.time)
+                self.assertEqual(self.trainer.candidate_count,before)
+            else:self.frame('R',dt=80)
+            events=self.frame('R',dt=33)
+            self.assertFalse(any(e['type']=='recipe' for e in events))
+
     def test_confirmation_requires_recipe(self):
         events = self.hold("R")
         self.assertEqual(events[-1]["reason"], "confirmation_without_recipe")
