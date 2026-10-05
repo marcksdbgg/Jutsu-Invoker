@@ -88,6 +88,11 @@ status = "initial_camera_pilot_timing_requires_validation"
 monkey_enter_score = 0.75
 monkey_min_stable_ms = 100
 monkey_min_fresh_observations = 4
+# Cuatro imágenes a 30 FPS abarcan unos 99 ms; 90 ms evita esperar una quinta
+# por redondeo del PTS. Confianza y margen de tigre conservan sus límites.
+tiger_enter_score = 0.8
+tiger_min_stable_ms = 90
+tiger_min_fresh_observations = 4
 element_min_stable_ms = 150
 confirmation_min_stable_ms = 200
 element_min_fresh_observations = 5

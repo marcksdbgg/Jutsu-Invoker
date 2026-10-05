@@ -57,3 +57,47 @@ class SettingsTests(unittest.TestCase):
         self.assertEqual(trainer.pending,['Q'])
         events=trainer.update(Observation(1750,'unknown',0,0),1750)
         self.assertEqual(events[0]['reason'],'recipe_timeout');self.assertEqual(trainer.pending,[])
+    def test_tiger_accepts_four_clear_frames_without_shortening_horse_or_snake(self):
+        th=thresholds_from_config(BASE)
+        for sign in ['tiger','horse','snake']:
+            trainer=Trainer(ROOT/'diseno/mapa-recetas.json',th);trainer.pending=['Q'];events=[]
+            for t in [0,33,66,99]:events.extend(trainer.update(Observation(t,sign,.9,.3),t))
+            self.assertEqual(any(e['type']=='accepted' for e in events),sign=='tiger')
+            self.assertFalse(any(e['type']=='recipe' for e in events))
+    def test_tiger_still_requires_both_elapsed_time_and_four_distinct_images(self):
+        th=thresholds_from_config(BASE)
+        for timestamps in [[0,10,20,30,40],[0,45,90]]:
+            trainer=Trainer(ROOT/'diseno/mapa-recetas.json',th);events=[]
+            for t in timestamps:events.extend(trainer.update(Observation(t,'tiger',.9,.3),t))
+            self.assertFalse(any(e['type']=='accepted' for e in events))
+        trainer=Trainer(ROOT/'diseno/mapa-recetas.json',th)
+        for _ in range(20):trainer.update(Observation(0,'tiger',.9,.3),0)
+        self.assertEqual(trainer.pending,[]);self.assertEqual(trainer.candidate_count,1)
+    def test_tiger_speedup_does_not_accept_weak_ambiguous_or_interrupted_pose(self):
+        th=thresholds_from_config(BASE)
+        for score,margin in [(.79,.3),(.9,.14)]:
+            trainer=Trainer(ROOT/'diseno/mapa-recetas.json',th);events=[]
+            for t in [0,33,66,99,132,165]:events.extend(trainer.update(Observation(t,'tiger',score,margin),t))
+            self.assertFalse(any(e['type']=='accepted' for e in events))
+        for middle in [Observation(66,'unknown',0,0),Observation(66,'horse',.9,.3),
+                       Observation(66,'tiger',.9,.3,False)]:
+            trainer=Trainer(ROOT/'diseno/mapa-recetas.json',th)
+            for t in [0,33]:trainer.update(Observation(t,'tiger',.9,.3),t)
+            trainer.update(middle,66)
+            events=[]
+            for t in [99,132,165]:events.extend(trainer.update(Observation(t,'tiger',.9,.3),t))
+            self.assertFalse(any(e['type']=='accepted' for e in events))
+    def test_tiger_specific_settings_persist_without_changing_other_poses(self):
+        settings=UserSettings(self.root,BASE)
+        settings.save({'tiger_stable_ms':130,'tiger_observations':5,'tiger_enter_score':.82})
+        th=thresholds_from_config(UserSettings(self.root,BASE).config())
+        self.assertEqual(th.stability_for('tiger'),(130,5));self.assertEqual(th.score_for('tiger'),.82)
+        self.assertEqual(th.stability_for('horse'),(150,5));self.assertEqual(th.score_for('horse'),.8)
+        with self.assertRaises(ValueError):settings.save({'tiger_observations':2})
+    def test_existing_user_preferences_gain_new_tiger_defaults(self):
+        (self.root/'config/usuario.json').write_text(json.dumps({'timeout_ms':1900,'monkey_score':.76}))
+        settings=UserSettings(self.root,BASE)
+        self.assertEqual(settings.values['timeout_ms'],1900)
+        self.assertEqual(settings.values['monkey_score'],.76)
+        self.assertEqual(settings.values['tiger_stable_ms'],90)
+        self.assertEqual(settings.values['tiger_observations'],4)

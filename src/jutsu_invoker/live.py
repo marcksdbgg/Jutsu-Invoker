@@ -26,7 +26,9 @@ def thresholds_from_config(config: dict) -> Thresholds:
                       timeout_ms=a["inter_sign_timeout_ms"], max_age_ms=a["max_observation_age_ms"],
                       max_gap_ms=a["max_observation_gap_ms"], release_ms=a["release_min_ms"],
                       monkey_enter_score=a.get("monkey_enter_score"), monkey_stable_ms=a.get("monkey_min_stable_ms"),
-                      monkey_observations=a.get("monkey_min_fresh_observations"))
+                      monkey_observations=a.get("monkey_min_fresh_observations"),
+                      tiger_enter_score=a.get("tiger_enter_score"), tiger_stable_ms=a.get("tiger_min_stable_ms"),
+                      tiger_observations=a.get("tiger_min_fresh_observations"))
 
 
 class VideoHub:

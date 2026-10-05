@@ -34,8 +34,13 @@ class Thresholds:
     monkey_enter_score: float | None = None
     monkey_stable_ms: float | None = None
     monkey_observations: int | None = None
+    tiger_enter_score: float | None = None
+    tiger_stable_ms: float | None = None
+    tiger_observations: int | None = None
 
     def score_for(self, sign):
+        if sign == 'tiger' and self.tiger_enter_score is not None:
+            return self.tiger_enter_score
         return self.monkey_enter_score if sign == 'monkey' and self.monkey_enter_score is not None else self.enter_score
 
     def stability_for(self, sign):
@@ -44,6 +49,9 @@ class Thresholds:
         if sign == 'monkey':
             return (self.monkey_stable_ms if self.monkey_stable_ms is not None else self.element_stable_ms,
                     self.monkey_observations if self.monkey_observations is not None else self.element_observations)
+        if sign == 'tiger':
+            return (self.tiger_stable_ms if self.tiger_stable_ms is not None else self.element_stable_ms,
+                    self.tiger_observations if self.tiger_observations is not None else self.element_observations)
         return self.element_stable_ms, self.element_observations
 
 

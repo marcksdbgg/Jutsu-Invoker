@@ -127,3 +127,12 @@ El usuario cambió la asignación: se añadió el cuarto golpe (1,292–1,528 s,
 Comprobación real posterior: GSI registró inicio de recarga de Chaos Meteor, Ghost Walk y EMP en D, y Tornado en F. El enlace no emitió D/F. Estos son eventos de lanzamiento distintos de las confirmaciones de preparación; la escucha del remate queda pendiente del usuario.
 
 El usuario confirmó la escucha del cuarto golpe en serpiente y del quinto al lanzar manualmente. A petición suya se redujo solo la ganancia del remate de 0,95 a 0,72 (24 % menos, −2,4 dB); los sellos y el volumen general conservan su nivel.
+
+
+### Respuesta de tigre · 2026-10-05
+
+Se separó la aceptación de tigre de la de caballo. Tigre conserva score ≥0,8 y margen ≥0,15; necesita cuatro imágenes frescas y 90 ms en lugar de cinco y 150 ms. A 30 FPS cuatro imágenes abarcan unos 99 ms: exigir 100 ms exactos podía obligar a esperar la quinta por redondeo de PTS. Imágenes débiles, ambiguas, antiguas o de otras clases siguen reiniciando el candidato; no se acumulan a través de una transición. Mono, caballo y serpiente conservan sus perfiles. Confianza, estabilidad y mínimo de imágenes de tigre se editan en el panel y las preferencias anteriores conservan sus otros valores.
+
+Replay de las mismas 22 pruebas medidas de poses/repose del 4 de octubre: cuatro intentos de tigre aceptados en ambos perfiles; cero aceptaciones W en los otros 18. Desde la primera evidencia fiable de tigre, los tiempos pasan de [825,06; 297,02; 165,01; 165,01] ms a [330,03; 231,02; 99,01; 99,01] ms. Son pruebas retrospectivas de la toma usada para calibrar, no una nueva medida de precisión ni latencia desde el sensor. Informe local no versionado: `runtime/tiger-latency-replay.json`.
+
+El refinamiento continúa exigiendo espejo y contexto independientes con score ≥0,85. Si el espejo falla, se omite la segunda inferencia, pues el acuerdo ya es imposible; no se altera la clasificación. No se atribuye una mejora de latencia GPU medida a este ahorro. La [guía primaria de MediaPipe](https://ai.google.dev/edge/api/mediapipe/python/mp/tasks/vision/GestureRecognizer) también describe el descarte de imágenes para reducir latencia en streaming; aquí se conserva el productor existente con una sola imagen pendiente y timestamps frescos, sin añadir otro modelo. Suite: 108 Python + 13 Node.

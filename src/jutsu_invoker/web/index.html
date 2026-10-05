@@ -51,15 +51,18 @@
           <label>Reinicio sin sello · segundos<input type="number" data-setting="timeout_ms" data-scale="1000" min="0.4" max="10" step="0.1" required><small>Tiempo para cambiar de pose antes de borrar la receta.</small></label>
           <label>Estabilidad de mono · ms<input type="number" data-setting="monkey_stable_ms" min="50" max="1000" step="10" required><small>Menos tiempo permite empezar Quas más rápido.</small></label>
           <label>Confianza de mono · 0 a 1<input type="number" data-setting="monkey_score" min="0.6" max="0.99" step="0.01" required><small>Un valor menor acepta imágenes menos claras.</small></label>
+          <label>Estabilidad de tigre · ms<input type="number" data-setting="tiger_stable_ms" min="50" max="1000" step="10" required><small>Exige también cuatro imágenes frescas; 90 ms son unos 100 ms a 30 FPS.</small></label>
           <label>Suavizado del vídeo · ms<input type="number" data-setting="preview_buffer_ms" min="0" max="200" step="10" required><small>Un pequeño búfer suaviza los saltos; añade ese retraso al vídeo.</small></label>
         </div>
         <details class="advanced-settings"><summary>Más ajustes</summary><div class="settings-grid">
-          <label>Estabilidad tigre / caballo · ms<input type="number" data-setting="element_stable_ms" min="50" max="1000" step="10" required></label>
-          <label>Confianza de otros sellos<input type="number" data-setting="element_score" min="0.6" max="0.99" step="0.01" required></label>
+          <label>Estabilidad de caballo · ms<input type="number" data-setting="element_stable_ms" min="50" max="1000" step="10" required></label>
+          <label>Confianza de caballo / serpiente<input type="number" data-setting="element_score" min="0.6" max="0.99" step="0.01" required></label>
+          <label>Confianza de tigre<input type="number" data-setting="tiger_enter_score" min="0.6" max="0.99" step="0.01" required></label>
           <label>Estabilidad serpiente · ms<input type="number" data-setting="confirmation_stable_ms" min="66" max="1000" step="1" required></label>
           <label>Margen entre clases<input type="number" data-setting="class_margin" min="0" max="0.5" step="0.01" required></label>
           <label>Imágenes mínimas de mono<input type="number" data-setting="monkey_observations" min="2" max="30" step="1" required></label>
-          <label>Imágenes mínimas tigre / caballo<input type="number" data-setting="element_observations" min="2" max="30" step="1" required></label>
+          <label>Imágenes mínimas de caballo<input type="number" data-setting="element_observations" min="2" max="30" step="1" required></label>
+          <label>Imágenes mínimas de tigre<input type="number" data-setting="tiger_observations" min="3" max="30" step="1" required></label>
           <label>Imágenes mínimas de serpiente<input type="number" data-setting="confirmation_observations" min="3" max="30" step="1" required></label>
           <label>Liberación del sello · ms<input type="number" data-setting="release_ms" min="33" max="500" step="1" required></label>
           <label>Edad máxima de imagen · ms<input type="number" data-setting="max_age_ms" min="50" max="250" step="1" required></label>

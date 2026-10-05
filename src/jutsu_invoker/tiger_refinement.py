@@ -6,12 +6,16 @@ for auditing. A ram prediction alone cannot become a supported seal.
 from .gpu import choose_evidence
 
 
+def strong_tiger(evidence, score, margin):
+    return evidence['sign'] == 'tiger' and evidence['score'] >= score and evidence['margin'] >= margin
+
+
 def agreed_tiger(original, mirrored, context, score=.85, margin=.15):
     base = choose_evidence(original)
     if not original or original[0]['source_label'] != 'Hitsuji(Ram)' or base['score'] < .5:
         return base, False
     views = [choose_evidence(v) for v in (mirrored, context)]
-    if not all(v['sign'] == 'tiger' and v['score'] >= score and v['margin'] >= margin for v in views):
+    if not all(strong_tiger(v, score, margin) for v in views):
         return base, False
     return {'sign':'tiger', 'score':min(v['score'] for v in views),
             'margin':min(v['margin'] for v in views)}, True
@@ -31,9 +35,18 @@ def refine_tiger(model, image, detections, minimum_score=.85):
     if right-left<32 or bottom-top<32:
         return base, None
     mirrored = cp.ascontiguousarray(image[:,::-1])
-    context = cp.ascontiguousarray(image[top:bottom,left:right])
     cp.cuda.get_current_stream().synchronize()
     mirror_d = model.infer(mirrored)
+    diagnostic = {'method':'mirror_and_context_agreement','accepted':False,
+                  'context_box':[left,top,right,bottom], 'mirror_detections':mirror_d,
+                  'context_detections':[], 'minimum_score':minimum_score}
+    # A failed mirror already makes two-view agreement impossible.
+    # Skip the crop and second inference without changing the classification.
+    if not strong_tiger(choose_evidence(mirror_d), minimum_score, .15):
+        diagnostic['context_skipped'] = True
+        return base, diagnostic
+    context = cp.ascontiguousarray(image[top:bottom,left:right])
+    cp.cuda.get_current_stream().synchronize()
     context_d = model.infer(context)
     evidence, accepted = agreed_tiger(detections,mirror_d,context_d,score=minimum_score)
     return evidence, {'method':'mirror_and_context_agreement','accepted':accepted,
