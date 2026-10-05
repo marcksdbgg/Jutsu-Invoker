@@ -53,6 +53,10 @@ def effective_keys(spec):
 
 def read_keymap(path):
     spec=parse_vdf_keys(Path(path).read_text())['KeyBindings']
+    return _keymap_from_spec(spec)
+
+
+def _keymap_from_spec(spec):
     keys=effective_keys(spec)
     roles={'Q':'AbilityPrimary1','W':'AbilityPrimary2','E':'AbilityPrimary3','R':'AbilityUltimate'}
     output={}
@@ -68,8 +72,12 @@ def read_keymap(path):
 
 def read_controls(path):
     spec=parse_vdf_keys(Path(path).read_text())['KeyBindings']
+    return _controls_from_spec(spec)
+
+
+def _controls_from_spec(spec):
     keys=effective_keys(spec)
-    result=read_keymap(path)
+    result=_keymap_from_spec(spec)
     extra={}
     for role in ['HeroSelect','AbilitySecondary1','AbilitySecondary2']:
         binding=keys.get(role,{})
@@ -84,8 +92,11 @@ def read_controls(path):
 
 def controls_signature(path, controls=None):
     """Relevant effective bindings, independent of formatting and unrelated keys."""
-    controls = controls or read_controls(path)
     spec = parse_vdf_keys(Path(path).read_text())['KeyBindings']
+    return _signature_from_spec(spec, controls or _controls_from_spec(spec))
+
+
+def _signature_from_spec(spec, controls):
     protected = set(controls['keys'].values()) | {controls['select_key']} | set(controls['cast_keys'])
     relevant = {}
     for role, binding in effective_keys(spec).items():
@@ -196,11 +207,15 @@ class DotaIntegration:
         self.input_guard_factory=input_guard_factory;self.input_guard=None
         self.clock=clock or (lambda:time.monotonic()*1000);self.sleep=sleeper or time.sleep
         self.config=None;self.receiver=None;self.keyboard=None
-        self.stop_event=threading.Event();self.pending=queue.Queue(maxsize=1)
+        self.stop_event=threading.Event();self.wake_event=threading.Event();self.pending=queue.Queue(maxsize=1)
         self.seen=deque(maxlen=128);self.armed=False;self.context_generation=0;self.context_active=False;self.context_since_ms=0
         self.updated_ms=None;self.version=0;self.game={};self.last_action=None;self.sent_any=False
         self.problem=None;self.dispatching=False;self.camera_live=False;self.session=None
+        self.validated_controls=None
         self.camera_timestamp_ms=None;self.camera_max_age_ms=100;self.camera_context_timeout_ms=1600
+        # Fresh input must authorize the start. A bounded continuation tolerates
+        # camera jitter while completing that same command; it cannot start one.
+        self.camera_send_grace_ms=150
         self.actions=deque(maxlen=64);self.progress=None
         self.prepared_events=deque(maxlen=32);self.on_prepared=lambda event:None
         self.cast_events=deque(maxlen=32);self.on_cast=lambda event:None;self.cast_needs_baseline=True
@@ -292,7 +307,7 @@ class DotaIntegration:
                    'timestamp_ms':now,'received_ms':now}
             self.cast_events.append(event);self.on_cast(event)
 
-    def ready(self,now=None,orbs=None,invoke=True,context=False):
+    def ready(self,now=None,orbs=None,invoke=True,context=False,continuing=False):
         now=self.clock() if now is None else now
         if not self.config:return False,'Enlace de Dota sin habilitar; inicia con --dota'
         if self.updated_ms is None or now-self.updated_ms>1500 or now<self.updated_ms:return False,'Esperando estado reciente de Dota; requiere -gamestateintegration'
@@ -314,8 +329,8 @@ class DotaIntegration:
                 return False,'Orbes o Invoke no disponibles'
         camera_ok=self.camera_live
         if self.camera_timestamp_ms is not None:
-            limit=self.camera_context_timeout_ms if context else self.camera_max_age_ms
-            camera_ok=(context or self.camera_live) and 0<=now-self.camera_timestamp_ms<=limit
+            limit=self.camera_context_timeout_ms if context else self.camera_max_age_ms+(self.camera_send_grace_ms if continuing else 0)
+            camera_ok=(context or continuing or self.camera_live) and 0<=now-self.camera_timestamp_ms<=limit
         if not camera_ok:
             return False,'Cámara detenida o imagen atrasada'
         if self.input_guard and self.input_guard.blocked:
@@ -330,17 +345,27 @@ class DotaIntegration:
 
     def verify_controls(self):
         self.verify_input_config()
-        if read_controls(self.config['bindings'])!={k:self.config[k] for k in ['keys','select_key','cast_keys']}:
+        # Read and hash before EVERY key. Reparse only changed bytes or changed
+        # expectations, using one immutable snapshot for all effective controls.
+        contents=Path(self.config['bindings']).read_bytes()
+        digest=hashlib.sha256(contents).hexdigest()
+        expectation=json.dumps({k:self.config.get(k) for k in
+                                ['keys','select_key','cast_keys','controls_signature','bindings_sha256']},sort_keys=True)
+        if self.validated_controls==(digest,expectation):return
+        spec=parse_vdf_keys(contents.decode())['KeyBindings']
+        controls=_controls_from_spec(spec)
+        if controls!={k:self.config[k] for k in ['keys','select_key','cast_keys']}:
             raise RuntimeError('Las teclas de Dota cambiaron')
         signature=self.config.get('controls_signature')
         if signature is not None:
-            if controls_signature(self.config['bindings'])!=signature:
+            if _signature_from_spec(spec,controls)!=signature:
                 raise RuntimeError('Las teclas de Dota cambiaron')
         else:
             # Legacy installations retain the strict check until explicitly installed again.
             expected=self.config.get('bindings_sha256')
-            if expected and hashlib.sha256(Path(self.config['bindings']).read_bytes()).hexdigest()!=expected:
+            if expected and digest!=expected:
                 raise RuntimeError('Las teclas de Dota cambiaron')
+        self.validated_controls=(digest,expectation)
 
     def arm(self):
         with self.lock:
@@ -412,16 +437,29 @@ class DotaIntegration:
                 self.progress=None
                 self.actions.append({'status':'rejected','reason':'Invocación ocupada','spell':spell,'token':token});return
             ok,reason=self.ready(now,required,kind=='recipe')
-            if not ok or not self.focus_probe() or not self.input_guard.clear():
+            if not ok:
                 self.progress=None
-                self._action({'status':'rejected','reason':reason if not ok else 'Dota sin foco o teclas presionadas','spell':spell,'token':token});return
-            self.pending.put_nowait({**event,'context_generation':self.context_generation})
+                self._action({'status':'rejected','reason':reason,'spell':spell,'token':token});return
+            focused=self.focus_probe()
+            if not focused or not self.input_guard.clear():
+                self.progress=None
+                reason='Dota sin foco' if not focused else 'Teclas de habilidad o modificadores presionados'
+                self._action({'status':'rejected','reason':reason,'spell':spell,'token':token});return
+            # Authorization begins here, while the image is fresh. The focus and
+            # Xwayland checks themselves can cross the camera's 100 ms boundary.
+            self.pending.put_nowait({**event,'context_generation':self.context_generation,'camera_authorized_ms':now})
+            self.wake_event.set()
 
-    def _allowed(self,deadline,epoch,orbs,invoke,manual_epoch):
+    def _require_allowed(self,deadline,epoch,orbs,invoke,manual_epoch,continuing=False):
         now=self.clock()
-        return (now<=deadline and self.armed and epoch==self.context_generation
-                and self.ready(now,orbs,invoke)[0] and self.focus_probe() and self.input_guard.clear()
-                and self.input_guard.epoch==manual_epoch)
+        if now>deadline:raise RuntimeError('El gesto caducó antes de completar el envío')
+        if not self.armed:raise RuntimeError('Invocación desactivada durante el envío')
+        if epoch!=self.context_generation:raise RuntimeError('Cambió el contexto durante el envío')
+        ok,reason=self.ready(now,orbs,invoke,continuing=continuing)
+        if not ok:raise RuntimeError(reason)
+        if not self.focus_probe():raise RuntimeError('Dota perdió el foco durante el envío')
+        if not self.input_guard.clear():raise RuntimeError('Teclas de habilidad o modificadores presionados')
+        if self.input_guard.epoch!=manual_epoch:raise RuntimeError('Entrada manual durante el envío')
 
     def _confirm_locked(self):
         action=self.last_action
@@ -438,7 +476,8 @@ class DotaIntegration:
             self.dispatching=True;version=self.version;manual_epoch=self.input_guard.epoch
             progress=self.progress
         try:
-            if not self._allowed(deadline,epoch,orbs,not selecting,manual_epoch):raise RuntimeError('Se perdió foco, cámara, estado o vigencia')
+            self._require_allowed(deadline,epoch,orbs,not selecting,manual_epoch,
+                                  continuing=event.get('camera_authorized_ms') is not None)
             self.verify_controls()
             if not selecting and self.game.get('abilities',{}).get('ability3',{}).get('name')==ability:
                 self.progress=None
@@ -458,7 +497,7 @@ class DotaIntegration:
             sequence=[self.config['input_keys']['select']]+[self.config['input_keys'][o] for o in remaining+('' if selecting else 'R')]
             for key in sequence:
                 self.verify_controls()
-                if not self._allowed(deadline,epoch,orbs,not selecting,manual_epoch):raise RuntimeError('Se perdió foco, cámara, estado o vigencia; entrada manual')
+                self._require_allowed(deadline,epoch,orbs,not selecting,manual_epoch,continuing=True)
                 self.input_guard.expect(key)
                 if self.input_guard.blocked or self.input_guard.epoch!=manual_epoch:
                     raise RuntimeError('Entró una pulsación manual antes del envío')
@@ -477,7 +516,9 @@ class DotaIntegration:
                                   'context_generation':epoch,'sent_ms':self.clock()})
                     self._confirm_locked()
         except Exception as error:
-            self._action({'status':'cancelled','reason':str(error),'spell':spell,'token':event.get('token'),'keys':sent})
+            self._action({'status':'cancelled','reason':str(error),'spell':spell,'token':event.get('token'),'keys':sent,
+                          'camera_age_ms':self.clock()-self.camera_timestamp_ms if self.camera_timestamp_ms is not None else None,
+                          'manual_epoch_changed':self.input_guard.epoch!=manual_epoch})
             if str(error)=='Las teclas de Dota cambiaron':self.disarm(str(error))
             elif epoch!=self.context_generation or not self.ready(orbs='',invoke=False,context=True)[0] or not self.focus_probe():
                 self.cancel_pending(str(error))
@@ -506,7 +547,9 @@ class DotaIntegration:
         self._send(event)
 
     def _worker(self):
-        while not self.stop_event.wait(.05):
+        while not self.stop_event.is_set():
+            self.wake_event.wait(.05);self.wake_event.clear()
+            if self.stop_event.is_set():break
             try:self.tick()
             except Exception as error:self.disarm(str(error))
 
@@ -526,7 +569,7 @@ class DotaIntegration:
                     'progress':self.progress,'manual_tracking':bool(self.input_guard and self.input_guard.tracking_available)}
 
     def close(self):
-        self.disarm('Servicio cerrado');self.stop_event.set()
+        self.disarm('Servicio cerrado');self.stop_event.set();self.wake_event.set()
         if self.worker:self.worker.join(timeout=3)
         if self.receiver:self.receiver.shutdown();self.receiver.server_close()
         if self.keyboard:self.keyboard.close();self.keyboard=None

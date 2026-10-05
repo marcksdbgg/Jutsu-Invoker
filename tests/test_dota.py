@@ -200,10 +200,53 @@ class DotaTests(unittest.TestCase):
     def test_camera_stall_mid_send_aborts_before_invoke(self):
         epoch=self.app.context_generation
         self.app.camera_timestamp_ms=self.now
+        # A prolonged gap still aborts a transaction that started with fresh input.
+        self.app.sleep=lambda seconds:self.advance(seconds*3)
         self.app.submit(self.event());self.app.tick()
         self.assertNotIn(('f16',1),self.app.keyboard.events)
         self.assertEqual(self.app.last_action['status'],'cancelled');self.assertFalse(self.app.keyboard.down)
+        self.assertEqual(self.app.last_action['reason'],'Cámara detenida o imagen atrasada')
+        self.assertFalse(self.app.last_action['manual_epoch_changed'])
+        self.assertGreater(self.app.last_action['camera_age_ms'],250)
         self.assertEqual(self.app.context_generation,epoch)
+
+    def test_brief_camera_gap_during_validated_send_completes_all_ten_recipes(self):
+        for spell,(orbs,_) in self.app.spells.items():
+            with self.subTest(spell=spell):
+                self.app.receive(self.payload);self.app.last_action=None
+                self.app.camera_live=True;self.app.camera_timestamp_ms=self.now
+                self.confirm_on_invoke(spell);before=len(self.app.keyboard.events)
+                self.app.submit(self.event(spell,orbs));self.app.tick()
+                self.assertEqual(self.app.last_action['status'],'observed_in_gsi')
+                self.assertEqual([k for k,v in self.app.keyboard.events[before:] if v],
+                                 ['f17']+[self.config['input_keys'][o] for o in orbs+'R'])
+
+    def test_continuation_never_authorizes_a_stale_start(self):
+        self.app.camera_timestamp_ms=self.now;self.advance(.11)
+        self.app.submit(self.event());self.app.tick()
+        self.assertFalse(self.app.keyboard.events)
+
+    def test_fresh_authorization_survives_short_dispatch_delay(self):
+        self.app.camera_timestamp_ms=self.now
+        self.app.submit({'type':'accepted','token':'E','pending':['E'],'timestamp_ms':self.now})
+        self.advance(.11);self.app.camera_live=False
+        self.app.tick()
+        self.assertEqual(self.app.last_action['status'],'orb_selected')
+        self.assertEqual([k for k,v in self.app.keyboard.events if v],['f17','f15'])
+
+    def test_explicit_camera_stop_during_send_still_aborts_immediately(self):
+        def hook(key,value):
+            if value:self.app.camera_live=False;self.app.camera_timestamp_ms=None
+        self.app.keyboard.hook=hook
+        self.app.submit(self.event());self.app.tick()
+        self.assertEqual(self.app.last_action['status'],'cancelled')
+        self.assertNotIn(('f16',1),self.app.keyboard.events)
+        self.assertFalse(self.app.keyboard.down)
+
+    def test_new_gesture_wakes_input_worker_without_polling_delay(self):
+        self.assertFalse(self.app.wake_event.is_set())
+        self.app.submit(self.event())
+        self.assertTrue(self.app.wake_event.is_set())
 
     def test_prepared_notification_requires_gsi_or_existing_slot_d(self):
         notifications=[];self.app.on_prepared=notifications.append
@@ -318,6 +361,23 @@ class DotaTests(unittest.TestCase):
     def test_binding_change_prevents_send(self):
         self.bindings.write_text(self.bindings.read_text().replace('"q"','"z"'))
         self.app.submit(self.event());self.app.tick();self.assertFalse(self.app.keyboard.events);self.assertEqual(self.app.last_action['status'],'cancelled')
+    def test_unchanged_controls_are_read_but_not_reparsed(self):
+        from unittest.mock import patch
+        self.app.verify_controls()
+        with patch('jutsu_invoker.dota.parse_vdf_keys',side_effect=AssertionError('unexpected reparse')):
+            self.app.verify_controls()
+        self.bindings.unlink()
+        with self.assertRaises(FileNotFoundError):self.app.verify_controls()
+    def test_controls_cache_detects_changes_even_with_same_size_and_mtime(self):
+        import os
+        self.app.verify_controls();st=self.bindings.stat()
+        self.bindings.write_text(self.bindings.read_text().replace('"q"','"z"'))
+        os.utime(self.bindings,ns=(st.st_atime_ns,st.st_mtime_ns))
+        self.assertEqual(self.bindings.stat().st_size,st.st_size)
+        with self.assertRaisesRegex(RuntimeError,'Las teclas'):self.app.verify_controls()
+    def test_controls_cache_invalidates_when_expected_configuration_changes(self):
+        self.app.verify_controls();self.app.config['keys']['Q']='z'
+        with self.assertRaisesRegex(RuntimeError,'Las teclas'):self.app.verify_controls()
     def use_semantic_controls_check(self):
         from jutsu_invoker.dota import controls_signature
         self.app.config['controls_signature']=controls_signature(self.bindings)

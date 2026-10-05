@@ -69,7 +69,7 @@ Los ajustes del panel persisten en `config/usuario.json`, que queda fuera de Git
 
 Tigre tiene confianza, estabilidad y mínimo de imágenes propios en el panel. El perfil rápido conserva score ≥0,8 y margen ≥0,15. En replay de 22 intentos etiquetados previos, los cuatro de tigre se aceptaron antes y no aparecieron nuevos tigres en los otros 18; esto es calibración retrospectiva, no precisión garantizada en una sesión nueva.
 
-Mantener visible un elemento ya guardado conserva la receta. Un hueco breve entre imágenes reinicia la estabilidad de la pose y conserva los elementos hasta el plazo de inactividad; una imagen antigua no autoriza enviar teclas. El rótulo **candidato** no significa que se haya aceptado un sello.
+Mantener visible un elemento ya guardado conserva la receta. Un hueco breve entre imágenes reinicia la estabilidad de la pose y conserva los elementos hasta el plazo de inactividad; una imagen antigua no autoriza una orden nueva. El rótulo **candidato** no significa que se haya aceptado un sello.
 
 ## Integración con Dota
 
@@ -131,7 +131,7 @@ scripts/run_tests.sh
 .venv/bin/python scripts/preflight.py --output runtime/preflight.json
 ```
 
-La suite verificada contiene **114 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
+La suite verificada contiene **122 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
 
 En el panel, **Prueba de precisión** guía poses aisladas o las diez recetas. Los informes y grabaciones se guardan solo en `datos/evaluaciones/` y `datos/clips/`. Un informe es provisional hasta confirmar que se ejecutaron las poses, y necesita revisión del vídeo para una evaluación independiente.
 
