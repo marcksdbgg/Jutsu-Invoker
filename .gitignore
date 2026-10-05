@@ -1,0 +1,33 @@
+# Entorno, compilación y cachés de Python.
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Archivo local y estado de cada instalación (incluye GSI y credenciales).
+.archivo/
+runtime/
+config/usuario.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+
+# Pesos y datos personales: se conservan solo manifiestos y ejemplo sintético.
+modelos/pesos/
+modelos/*.pt
+modelos/*.pth
+modelos/*.onnx
+datos/*
+!datos/README.md
+!datos/ejemplos/
+
+# Audio de terceros preparado localmente, sin redistribución en Git.
+referencias/audio/*.mp3
+src/jutsu_invoker/web/audio/*.wav

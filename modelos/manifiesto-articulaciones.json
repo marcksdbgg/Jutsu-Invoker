@@ -1,0 +1,71 @@
+{
+  "source": "https://github.com/open-mmlab/mmpose/tree/main/projects/rtmpose",
+  "artifacts": [
+    {
+      "file": "modelos/pesos/rtmpose/det-deploy.json",
+      "sha256": "245495bae917740d2dd3f252d3c784c5325b6645b917a7a265156c12d251f15a"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/det-pipeline.json",
+      "sha256": "1cfed7b50641301f5b92da0629c263306c5d99818cb58b240923f7d4aa7e6060"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/det-detail.json",
+      "sha256": "ddbc7e74ef16c49f3cf8dc0fac5ad643ae9d6c881016b5e0b2a5c7a5bacc5656"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/det-end2end.onnx",
+      "sha256": "568d3ea97a5b142488366b67e036b6a5cb0a1fef9087a710cb8e66b6979fbac2"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/pose-deploy.json",
+      "sha256": "42cdb5a0b67478b5650aa499a9c2ba7f852d5c168e1b482c330b57f4cc2c324e"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/pose-pipeline.json",
+      "sha256": "86e6ee3d71e713abc454e44359e4c44a77da4514bcbff69307f7623239e9dc41"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/pose-detail.json",
+      "sha256": "3d20869530eb9ab9499d8fca0b036d1103749e65c29c6d0b400923f19dd76a7e"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/pose-end2end.onnx",
+      "sha256": "39e858936bca0f94c09847d4e70b68a51d6c0adac61f36b457fcadb54621cd29"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/det-cuda.onnx",
+      "sha256": "24ed3d2cf0e486068a536676f5a15eec4abe5d1cb03454def80ca303d6bc9fa1"
+    },
+    {
+      "file": "modelos/pesos/rtmpose/pose-cuda.onnx",
+      "sha256": "cfed012a70f3a942f7b3dcf7c3fddc748f7127aca77eaf9f0aea1ed97a1be8cd"
+    }
+  ],
+  "derivation": "det: outputs decoded boxes1442/scores1415 before CPU NMS; pose: fixed batch1; weights unchanged",
+  "preprocessing": {
+    "det": "BGR top-left320 pad114, mean[103.53,116.28,123.675], std[57.375,57.12,58.395]",
+    "pose": "RGB affine square padding1.25 256; mean[123.675,116.28,103.53], std[58.395,57.12,57.375]; SimCC /2"
+  },
+  "metadata_note": "pose pipeline legacy transform says192x256; actual graph and SimCC input_size agree256x256",
+  "archives": [
+    {
+      "kind": "det",
+      "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmdet_nano_8xb32-300e_hand-267f9c8f.zip",
+      "sha256": "9c0370a43c02b2fe42b4382aba7383d97cfa3ed35623b655cac4f0c25cfde402"
+    },
+    {
+      "kind": "pose",
+      "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-hand5_pt-aic-coco_210e-256x256-74fb594_20230320.zip",
+      "sha256": "45c9e1aa21b8fe33859973c49bce4647645d312e7a226e398a42f9137d44a56d"
+    }
+  ],
+  "code_license": "Apache-2.0 (MMPose); dataset terms and pretrained model use require their respective provenance",
+  "license_source": "https://github.com/open-mmlab/mmpose/blob/main/LICENSE",
+  "det_diagnostic_score": 0.3,
+  "joint_response_display": {
+    "minimum": 0.15,
+    "firm_color": 0.5,
+    "note": "SimCC response, not calibrated joint accuracy; occlusion can yield wrong or missing points"
+  }
+}

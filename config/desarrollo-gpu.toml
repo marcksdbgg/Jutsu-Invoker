@@ -1,0 +1,142 @@
+# Entrenador Android USB + NVDEC + TensorRT implementado.
+# Parámetros de aceptación candidatos, pendientes de calibración con cámara.
+schema_version = 2
+status = "live_android_nvdec_tensorrt_trainer"
+updated_date = "2026-10-04"
+recipe_spec = "diseno/mapa-recetas.json"
+
+[compute]
+device = "cuda:0"
+inference_backend = "tensorrt"
+final_inference_backend = "tensorrt"
+reference_backend = "onnxruntime_cuda_profile_checked"
+network_precision = "fp32"
+final_network_precision = "fp32_validated_fp16_optional"
+geometry_precision = "fp32"
+allow_heavy_cpu_fallback = false
+decode_backend = "nvdec_pynvvideocodec_core"
+image_preprocessing_device = "cuda"
+training_device = "cuda"
+engine_build_during_game = false
+training_during_game = false
+engine_cache = "runtime/engines"
+
+[capture]
+backend = "scrcpy_packets"
+connection = "adb_usb"
+adb_path = "adb"
+camera_facing = "back"
+# Compensa el teléfono colocado cabeza abajo; también gira lo que reciben los modelos.
+capture_orientation_degrees = 180
+width = 1280
+height = 720
+target_fps = 30
+fallback_fps = 30
+codec = "h264"
+keep_packet_timestamps = true
+audio_enabled = false
+remote_control_enabled = false
+inference_pending_frames = 1
+pending_frame_policy = "replace_with_latest_decoded"
+compressed_packet_drop_policy = "preserve_decode_dependencies"
+low_latency_decode = "validated_b_frames_zero"
+camera_mode_verified = true
+
+[vision]
+detector = "naruto_yolox_nano_pretrained"
+detector_input = [416, 416]
+detector_target_hz = 30
+# Solo desambigua carnero cuando espejo y contexto coinciden en tigre con score >=0,85.
+tiger_refinement_enabled = true
+tiger_refinement_min_score = 0.85
+model_manifest = "modelos/manifiesto-naruto.json"
+label_csv_offset = 1
+class_mapping = { tiger = 2, snake = 5, horse = 6, monkey = 8 }
+pose_branch_enabled = true
+pose_diagnostic_hz = 15
+fusion_branch_enabled = false
+optional_hand_detector = "rtmdet_nano_hand"
+optional_hand_detector_target_hz = 20
+pose = "rtmpose_m_hand5"
+pose_input = [256, 256]
+max_hands = 2
+pose_batch_sizes_to_compare = [1, 2]
+appearance = "naruto_yolox_pretrained_joint_image"
+optional_personalized_backbone = "mobilenet_v3_small"
+appearance_input = [416, 416]
+appearance_roi = "both_hands_with_margin"
+temporal = "timestamp_acceptance_state_machine"
+optional_temporal = "small_causal_tcn"
+history_frames = 8
+history_variants = [4, 6, 8]
+lookahead_frames = 0
+include_timestamps_and_missing_masks = true
+personalized_checkpoint_available = false
+event_classes = ["monkey", "tiger", "horse", "snake", "unknown"]
+transition_class_trained = false
+optional_personalized_classes = ["monkey", "tiger", "horse", "snake", "transition", "unknown"]
+
+[mapping]
+Q = "monkey"
+W = "tiger"
+E = "horse"
+R = "snake"
+
+[acceptance]
+# Umbrales para calibrar, no probabilidades garantizadas.
+status = "initial_camera_pilot_timing_requires_validation"
+monkey_enter_score = 0.75
+monkey_min_stable_ms = 100
+monkey_min_fresh_observations = 4
+element_min_stable_ms = 150
+confirmation_min_stable_ms = 200
+element_min_fresh_observations = 5
+confirmation_min_fresh_observations = 7
+inter_sign_timeout_ms = 1600
+timeout_semantics = "inactivity_since_last_reliable_selected_pose"
+duplicate_selector_policy = "ignore_keep_recipe"
+require_valid_recipe_before_confirmation = true
+require_fresh_visual_confirmation = true
+emit_from_extrapolated_pose_alone = false
+repeat_held_sign = false
+enter_score = 0.8
+class_margin = 0.15
+max_observation_age_ms = 100
+max_observation_gap_ms = 100
+release_min_ms = 50
+
+[ui]
+preview_enabled = true
+preview_target_fps = 30
+preview_buffer_ms = 60
+video_rendering = "webcodecs_h264_prefer_hardware"
+game_mode_preview_enabled = false
+event_only_display_hz = 10
+
+[output]
+mode = "local_trainer"
+armed = false
+send_game_input = false
+cast_after_invoke = false
+gsi_bind = "127.0.0.1"
+gsi_port = 32148
+keymap_verified = false
+input_permission_verified = false
+
+[evaluation_targets]
+status = "targets_not_measurements"
+formed_sign_to_event_p95_ms = 150
+gpu_processing_p95_ms = 20
+additional_vram_gib = 1.5
+cpu_mean_logical_threads = 0.5
+dota_median_fps_loss_fraction = 0.05
+pilot_complete_recipe_accuracy = 0.95
+later_complete_recipe_accuracy = 0.99
+report_rejection_coverage = true
+report_false_confirmations_per_hour = true
+
+[advanced]
+challenger = "wilor_fast"
+use_only_after_benchmark_and_license_review = true
+run_both_pipelines_during_game = false
+research_references = ["OmniHands", "StableHand", "PAD-Hand"]

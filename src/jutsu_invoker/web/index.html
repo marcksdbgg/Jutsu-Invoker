@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="session-token" content="__CSRF_TOKEN__">
+  <meta name="color-scheme" content="light dark">
+  <title>Jutsu Invoker · Entrenador</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/preview.js" defer></script>
+  <script src="/sound.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<header>
+  <div><h1>Jutsu Invoker</h1><p>Entrenador de sellos · HONOR por USB</p></div>
+  <div class="connection" role="status"><span id="connection-dot"></span><span id="connection">Conectando…</span></div>
+</header>
+<main>
+  <section class="workspace" aria-label="Cámara y reconocimiento">
+    <div class="toolbar">
+      <label>Cámara <select id="camera"><option value="back">Trasera</option><option value="front">Frontal</option></select></label>
+      <button id="reconnect">Reconectar</button>
+      <button id="joints-toggle" aria-pressed="true">Ocultar articulaciones</button>
+      <button id="preview-toggle" aria-pressed="true">Ocultar vídeo</button>
+      <button id="camera-toggle">Detener cámara</button>
+    </div>
+    <div class="viewfinder">
+      <canvas id="video" width="1280" height="720" aria-label="Vista en vivo de la cámara del teléfono"></canvas>
+      <canvas id="joints" width="1280" height="720" aria-label="Articulaciones detectadas por RTMPose"></canvas>
+      <div id="trial-overlay" hidden><span id="trial-reference" aria-hidden="true"></span><div><strong id="trial-prompt"></strong><span id="trial-countdown"></span></div></div>
+      <div id="video-message">Esperando imágenes de la cámara…</div>
+      <div class="view-caption"><span id="camera-mode">HONOR · 720p</span><span>Manos completas, a la altura del pecho</span></div>
+    </div>
+    <div class="readout">
+      <div><span class="field-label">Sello visible</span><strong id="sign">Sin sello</strong></div>
+      <dl><div><dt>Score</dt><dd id="score">—</dd></div><div><dt>FPS</dt><dd id="fps">—</dd></div><div><dt>Procesamiento</dt><dd id="processing">—</dd></div></dl>
+    </div>
+    <p id="joints-status" class="local-note">Articulaciones · preparando modelo</p>
+    <p id="feedback" role="status">Forma mono, tigre o caballo. Serpiente confirma la receta.</p>
+    <div class="sound-controls" aria-label="Sonido al aceptar sellos">
+      <button id="sound-toggle" aria-pressed="false">Activar sonido</button>
+      <label for="sound-volume">Volumen <input id="sound-volume" type="range" min="0" max="100" step="5" value="65"><output id="sound-volume-value" for="sound-volume">65%</output></label>
+      <span id="sound-status">Efectos de sellos y confirmación de jutsu.</span>
+    </div>
+    <details class="settings-panel" id="settings-panel">
+      <summary>Ajustes de detección y vídeo</summary>
+      <form id="settings-form">
+        <p>Cambia los valores y pulsa Guardar. Se conservan en este PC. Guardar limpia la receta en curso; cambiar el giro reconecta la cámara.</p>
+        <div class="settings-grid">
+          <label>Reinicio sin sello · segundos<input type="number" data-setting="timeout_ms" data-scale="1000" min="0.4" max="10" step="0.1" required><small>Tiempo para cambiar de pose antes de borrar la receta.</small></label>
+          <label>Estabilidad de mono · ms<input type="number" data-setting="monkey_stable_ms" min="50" max="1000" step="10" required><small>Menos tiempo permite empezar Quas más rápido.</small></label>
+          <label>Confianza de mono · 0 a 1<input type="number" data-setting="monkey_score" min="0.6" max="0.99" step="0.01" required><small>Un valor menor acepta imágenes menos claras.</small></label>
+          <label>Suavizado del vídeo · ms<input type="number" data-setting="preview_buffer_ms" min="0" max="200" step="10" required><small>Un pequeño búfer suaviza los saltos; añade ese retraso al vídeo.</small></label>
+        </div>
+        <details class="advanced-settings"><summary>Más ajustes</summary><div class="settings-grid">
+          <label>Estabilidad tigre / caballo · ms<input type="number" data-setting="element_stable_ms" min="50" max="1000" step="10" required></label>
+          <label>Confianza de otros sellos<input type="number" data-setting="element_score" min="0.6" max="0.99" step="0.01" required></label>
+          <label>Estabilidad serpiente · ms<input type="number" data-setting="confirmation_stable_ms" min="66" max="1000" step="1" required></label>
+          <label>Margen entre clases<input type="number" data-setting="class_margin" min="0" max="0.5" step="0.01" required></label>
+          <label>Imágenes mínimas de mono<input type="number" data-setting="monkey_observations" min="2" max="30" step="1" required></label>
+          <label>Imágenes mínimas tigre / caballo<input type="number" data-setting="element_observations" min="2" max="30" step="1" required></label>
+          <label>Imágenes mínimas de serpiente<input type="number" data-setting="confirmation_observations" min="3" max="30" step="1" required></label>
+          <label>Liberación del sello · ms<input type="number" data-setting="release_ms" min="33" max="500" step="1" required></label>
+          <label>Edad máxima de imagen · ms<input type="number" data-setting="max_age_ms" min="50" max="250" step="1" required></label>
+          <label>Hueco para reiniciar estabilidad · ms<input type="number" data-setting="max_gap_ms" min="66" max="500" step="1" required><small>Descarta la pose incompleta; conserva los sellos aceptados hasta el plazo de reinicio.</small></label>
+          <label>Vídeo · FPS<input type="number" data-setting="preview_fps" min="15" max="30" step="1" required></label>
+          <label>Articulaciones · actualizaciones/s<select data-setting="pose_hz"><option value="0">0 · sin calcular articulaciones</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="30">30</option></select></label>
+          <label>Giro del teléfono<select data-setting="orientation"><option value="0">0°</option><option value="90">90°</option><option value="180">180° · posición actual</option><option value="270">270°</option></select></label>
+          <label>Confianza de corrección de tigre<input type="number" data-setting="tiger_score" min="0.8" max="0.99" step="0.01" required></label>
+          <label class="setting-check"><input type="checkbox" data-setting="tiger_refinement">Corregir la confusión tigre / carnero</label>
+        </div><p>La estabilidad exige también el mínimo de imágenes. Ocultar los puntos solo cambia su dibujo; usa 0 actualizaciones/s para dejar de calcular articulaciones.</p></details>
+        <div class="settings-actions"><button type="submit" id="settings-save">Guardar ajustes</button><button type="button" id="settings-reset">Restaurar recomendados</button><span id="settings-status" role="status"></span></div>
+      </form>
+    </details>
+    <section class="evaluation-panel" aria-labelledby="eval-title">
+      <h2 id="eval-title">Prueba de precisión</h2>
+      <p id="eval-prompt" aria-live="polite">Coloca ambas manos dentro del encuadre. El piloto te indicará qué sello hacer.</p>
+      <div class="evaluation-clock"><strong id="eval-countdown"></strong><span id="eval-progress"></span></div>
+      <div class="evaluation-controls">
+        <label>Prueba <select id="eval-mode"><option value="signs">Sellos y reposo</option><option value="recipes">Las diez recetas</option></select></label>
+        <label>Rondas <select id="eval-rounds"><option value="2">2 · diez intentos</option><option value="4">4 · veinte intentos</option></select></label>
+        <button id="evaluation-start">Estoy listo · empezar</button>
+        <button id="evaluation-exclude" hidden>No hice este intento</button>
+        <button id="evaluation-abort" hidden>Detener prueba</button>
+        <button id="evaluation-confirm" hidden>Confirmo que hice los gestos pedidos</button>
+      </div>
+      <p id="eval-result" role="status"></p>
+      <p class="evaluation-note" id="evaluation-note">Mantén cada sello hasta que aparezca su letra. Puedes cambiar de pose sin borrar la receta; tienes 3 s desde la última detección válida. Serpiente confirma tras 200 ms estables. 3,5 s para preparar cada sello; después mantenlo durante la cuenta. Para recetas, sigue el dibujo de cada paso y termina con serpiente; haz una sola ejecución por intento. Marca los intentos que no realizaste. Vídeo y resultados se guardan en este PC.</p>
+    </section>
+    <details class="reference-panel"><summary>Ver cómo se hacen los sellos</summary><img src="/sellos-naruto.png" alt="Diagrama de sellos Naruto: caballo (Uma), mono (Saru), serpiente (Mi) y tigre (Tora), junto a otros ocho sellos"><p>Caballo: segundo de la fila central. Mono: tercero de esa fila. Serpiente y tigre: tercero y cuarto de la última fila.</p></details>
+    <details class="capture-panel">
+      <summary>Guardar una toma para evaluar mis sellos</summary>
+      <p>El vídeo se guarda en este PC. Mantén el sello seleccionado y cambia la etiqueta para las transiciones o el reposo.</p>
+      <div class="capture-controls"><label>Etiqueta <select id="record-label"><option value="monkey">Mono</option><option value="tiger">Tigre</option><option value="horse">Caballo</option><option value="snake">Serpiente</option><option value="transition">Transición</option><option value="unknown">Reposo / desconocido</option></select></label><button id="record-toggle">Grabar toma</button></div>
+      <p id="record-status" role="status">Sin grabación activa.</p>
+    </details>
+    <details class="diagnostics">
+      <summary>Diagnóstico</summary>
+      <dl><div><dt>Motor</dt><dd id="backend">—</dd></div><div><dt>Fluidez del vídeo</dt><dd id="preview-timing">Midiendo…</dd></div><div><dt>Vídeo en Chrome</dt><dd id="preview-backend">Esperando decoder</dd></div><div><dt>Margen entre clases</dt><dd id="margin">—</dd></div><div><dt>Edad relativa de cola</dt><dd id="age">—</dd></div><div><dt>Procesamiento p95</dt><dd id="p95">—</dd></div><div><dt>CPU del proceso</dt><dd id="cpu">—</dd></div><div><dt>Último rechazo</dt><dd id="rejection">—</dd></div></dl>
+      <p>La edad de cola no incluye el retraso inicial del sensor. La vista previa solicita aceleración al navegador y puede usar su decoder compatible. El reconocimiento permanece en CUDA.</p>
+    </details>
+  </section>
+  <aside aria-label="Receta e historial">
+    <section class="sequence">
+      <div class="section-heading"><h2>Tu receta</h2><button id="cancel">Cancelar</button></div>
+      <div id="tokens" aria-live="polite"><span class="empty">Esperando el primer sello</span></div>
+      <p id="pending-spell">El primer sello decide el predominio.</p>
+      <div class="mapping"><p><b class="quas">Q</b><span>Mono<small>Quas</small></span></p><p><b class="wex">W</b><span>Tigre<small>Wex</small></span></p><p><b class="exort">E</b><span>Caballo<small>Exort</small></span></p><p><b class="invoke">R</b><span>Serpiente<small>Confirmar</small></span></p></div>
+    </section>
+    <section class="result"><h2>Última receta confirmada</h2><strong id="spell">Todavía ninguna</strong><p id="spell-orbs">La confirmación aparecerá aquí.</p><p id="output-note" class="local-note">Modo entrenador: las recetas se muestran aquí. No se envían teclas al juego.</p></section>
+    <details class="dota-panel">
+      <summary>Dota · invocar con sellos</summary>
+      <p id="dota-status" role="status">Esperando datos de Dota.</p>
+      <p id="dota-action"></p>
+      <button id="dota-arm" disabled>Activar invocación</button>
+      <button id="dota-disarm" hidden>Desactivar</button>
+      <p class="local-note">Funciona con tu Invoker en una sesión activa y Dota al frente. Cada sello coloca su orbe. Serpiente completa la fórmula e invoca. Tú lanzas el hechizo con D/F y apuntas como siempre.</p>
+    </details>
+    <section class="history"><h2>Actividad</h2><ol id="history"><li class="empty">Los sellos aceptados aparecerán aquí.</li></ol></section>
+  </aside>
+</main>
+<section class="recipes"><h2>Las diez recetas</h2><div id="recipes"></div></section>
+<footer>Vídeo y reconocimiento locales. Sonido opcional.<span id="service-error" role="alert"></span></footer>
+</body>
+</html>

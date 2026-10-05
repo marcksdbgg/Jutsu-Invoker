@@ -1,0 +1,254 @@
+{
+  "schema_version": 2,
+  "status": "implemented_local_trainer",
+  "date": "2026-10-04",
+  "default_output": "local_trainer",
+  "signs": {
+    "Q": {
+      "label": "monkey",
+      "es": "mono",
+      "ja": "Saru"
+    },
+    "W": {
+      "label": "tiger",
+      "es": "tigre",
+      "ja": "Tora"
+    },
+    "E": {
+      "label": "horse",
+      "es": "caballo",
+      "ja": "Uma"
+    },
+    "R": {
+      "label": "snake",
+      "es": "serpiente",
+      "ja": "Mi"
+    }
+  },
+  "grammar": {
+    "name": "dominance",
+    "single": "AAA",
+    "pair_distinct": "AAB",
+    "three_distinct": "QWE",
+    "confirmation": "R",
+    "repeat_while_held": false,
+    "duplicate_selector_in_compact_mode": "ignore_keep_recipe",
+    "emit_only_on_confirmation": true
+  },
+  "candidate_thresholds_unmeasured": {
+    "enter_score": 0.8,
+    "class_margin": 0.15,
+    "min_stable_ms": 150,
+    "min_fresh_observations": 5,
+    "inter_sign_timeout_ms": 1600,
+    "confirmation_min_stable_ms": 200,
+    "confirmation_min_fresh_observations": 7,
+    "timeout_semantics": "inactivity_since_reliable_selected_pose",
+    "monkey_enter_score": 0.75,
+    "monkey_min_stable_ms": 100,
+    "monkey_min_fresh_observations": 4
+  },
+  "spells": [
+    {
+      "name": "Cold Snap",
+      "orbs": "QQQ",
+      "counts": {
+        "Q": 3,
+        "W": 0,
+        "E": 0
+      },
+      "compact": [
+        "Q",
+        "R"
+      ],
+      "literal": [
+        "Q",
+        "Q",
+        "Q",
+        "R"
+      ]
+    },
+    {
+      "name": "Ghost Walk",
+      "orbs": "QQW",
+      "counts": {
+        "Q": 2,
+        "W": 1,
+        "E": 0
+      },
+      "compact": [
+        "Q",
+        "W",
+        "R"
+      ],
+      "literal": [
+        "Q",
+        "Q",
+        "W",
+        "R"
+      ]
+    },
+    {
+      "name": "Ice Wall",
+      "orbs": "QQE",
+      "counts": {
+        "Q": 2,
+        "W": 0,
+        "E": 1
+      },
+      "compact": [
+        "Q",
+        "E",
+        "R"
+      ],
+      "literal": [
+        "Q",
+        "Q",
+        "E",
+        "R"
+      ]
+    },
+    {
+      "name": "EMP",
+      "orbs": "WWW",
+      "counts": {
+        "Q": 0,
+        "W": 3,
+        "E": 0
+      },
+      "compact": [
+        "W",
+        "R"
+      ],
+      "literal": [
+        "W",
+        "W",
+        "W",
+        "R"
+      ]
+    },
+    {
+      "name": "Tornado",
+      "orbs": "WWQ",
+      "counts": {
+        "Q": 1,
+        "W": 2,
+        "E": 0
+      },
+      "compact": [
+        "W",
+        "Q",
+        "R"
+      ],
+      "literal": [
+        "W",
+        "W",
+        "Q",
+        "R"
+      ]
+    },
+    {
+      "name": "Alacrity",
+      "orbs": "WWE",
+      "counts": {
+        "Q": 0,
+        "W": 2,
+        "E": 1
+      },
+      "compact": [
+        "W",
+        "E",
+        "R"
+      ],
+      "literal": [
+        "W",
+        "W",
+        "E",
+        "R"
+      ]
+    },
+    {
+      "name": "Sun Strike",
+      "orbs": "EEE",
+      "counts": {
+        "Q": 0,
+        "W": 0,
+        "E": 3
+      },
+      "compact": [
+        "E",
+        "R"
+      ],
+      "literal": [
+        "E",
+        "E",
+        "E",
+        "R"
+      ]
+    },
+    {
+      "name": "Forge Spirit",
+      "orbs": "EEQ",
+      "counts": {
+        "Q": 1,
+        "W": 0,
+        "E": 2
+      },
+      "compact": [
+        "E",
+        "Q",
+        "R"
+      ],
+      "literal": [
+        "E",
+        "E",
+        "Q",
+        "R"
+      ]
+    },
+    {
+      "name": "Chaos Meteor",
+      "orbs": "EEW",
+      "counts": {
+        "Q": 0,
+        "W": 1,
+        "E": 2
+      },
+      "compact": [
+        "E",
+        "W",
+        "R"
+      ],
+      "literal": [
+        "E",
+        "E",
+        "W",
+        "R"
+      ]
+    },
+    {
+      "name": "Deafening Blast",
+      "orbs": "QWE",
+      "counts": {
+        "Q": 1,
+        "W": 1,
+        "E": 1
+      },
+      "compact": [
+        "Q",
+        "W",
+        "E",
+        "R"
+      ],
+      "literal": [
+        "Q",
+        "W",
+        "E",
+        "R"
+      ]
+    }
+  ],
+  "mapping_authority": "user_requested_for_practicality",
+  "updated_date": "2026-10-04",
+  "authoritative_thresholds": "config/desarrollo-gpu.toml + validated config/usuario.json overrides"
+}

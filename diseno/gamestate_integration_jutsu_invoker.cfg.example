@@ -1,0 +1,18 @@
+// EJEMPLO DE INVESTIGACION. No instalado ni probado con esta version de Dota.
+// Requiere un receptor local y la opcion de lanzamiento -gamestateintegration.
+// Intervalos propuestos, no garantias de frecuencia. No ordena acciones al juego.
+"Jutsu Invoker"
+{
+    "uri"       "http://127.0.0.1:32147/"
+    "timeout"   "5.0"
+    "buffer"    "0.1"
+    "throttle"  "0.1"
+    "heartbeat" "1.0"
+    "data"
+    {
+        "provider"  "1"
+        "map"       "1"
+        "hero"      "1"
+        "abilities" "1"
+    }
+}

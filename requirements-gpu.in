@@ -1,0 +1,12 @@
+# Runtime CUDA 12 validado en RTX 4060; todas las bibliotecas quedan en .venv.
+onnxruntime-gpu[cuda,cudnn]==1.26.0
+cupy-cuda12x==14.2.0
+onnx==1.23.1
+# Solo carga de imágenes y referencia de preprocesamiento en diagnósticos.
+opencv-python-headless==4.13.0.92
+
+PyNvVideoCodec==2.2.3
+tensorrt-cu12==11.3.0.99
+tensorrt-cu12-bindings==11.3.0.99
+# Wheel oficial explícito: evita el bootstrap wheel_stub y fija el hash.
+tensorrt-cu12-libs @ https://pypi.nvidia.com/tensorrt-cu12-libs/tensorrt_cu12_libs-11.3.0.99-py3-none-manylinux_2_28_x86_64.whl#sha256=aa156888838a37dcab4b93dfb20d7417f183dce1ef206dc73f14d3ad37a71a1f

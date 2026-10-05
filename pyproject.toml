@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jutsu-invoker"
+version = "0.1.0"
+description = "Entrenador local de sellos Naruto para recetas de Invoker"
+requires-python = ">=3.11"
+
+[project.scripts]
+jutsu-invoker = "jutsu_invoker.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+jutsu_invoker = ["web/*.html", "web/*.css", "web/*.js", "web/audio/*.wav"]

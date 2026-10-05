@@ -1,0 +1,220 @@
+{
+  "consulted_date_local": "2026-10-03",
+  "repositories": [
+    {
+      "repository": "DominoAI-Lab/PAD-Hand-CVPR-2026",
+      "revision": "ca9ed97bc671199c25cf569d3b1de0e6f7937251",
+      "pushed_at": "2026-06-03T02:45:41Z",
+      "license": null,
+      "paths": [
+        "demo.py"
+      ],
+      "url": "https://github.com/DominoAI-Lab/PAD-Hand-CVPR-2026",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "LinDixuan/OmniHands",
+      "revision": "935e1f580975263be799ebf56932e27ab18e1a01",
+      "pushed_at": "2024-10-05T20:02:29Z",
+      "license": null,
+      "paths": [
+        "run_demo.py"
+      ],
+      "url": "https://github.com/LinDixuan/OmniHands",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "facebookresearch/InterWild",
+      "revision": "7c01e4ad4909652056a68af93b4c16ceabbce8fe",
+      "pushed_at": "2024-07-10T03:37:00Z",
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      },
+      "paths": [
+        "LICENSE",
+        "demo/demo.py"
+      ],
+      "url": "https://github.com/facebookresearch/InterWild",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "facebookresearch/hand_tracking_toolkit",
+      "revision": "bc628e9286c18444b47a0971a89d075ea6f00747",
+      "pushed_at": "2026-09-30T02:27:06Z",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "paths": [
+        "LICENSE"
+      ],
+      "url": "https://github.com/facebookresearch/hand_tracking_toolkit",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "geopavlakos/hamer",
+      "revision": "3a01849f4148352e9260b69bf28b65d1671a4905",
+      "pushed_at": "2026-02-07T18:04:04Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "paths": [
+        "LICENSE.md",
+        "demo.py"
+      ],
+      "url": "https://github.com/geopavlakos/hamer",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "huajian-zeng/stablehand",
+      "revision": "0471a45e325ffa167cc6a8484d712a21befd3e47",
+      "pushed_at": "2026-09-25T02:18:14Z",
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      },
+      "paths": [
+        "LICENSE",
+        "utils/PYTORCH3D_LICENSE"
+      ],
+      "url": "https://github.com/huajian-zeng/stablehand",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "open-mmlab/mmpose",
+      "revision": "759b39c13fea6ba094afc1fa932f51dc1b11cbf9",
+      "pushed_at": "2025-08-04T07:30:50Z",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "paths": [
+        "LICENSE",
+        "configs/hand_2d_keypoint/rtmpose/hand5",
+        "configs/hand_2d_keypoint/rtmpose/hand5/rtmpose-m_8xb256-210e_hand5-256x256.py",
+        "configs/hand_2d_keypoint/rtmpose/hand5/rtmpose_hand5.md",
+        "configs/hand_2d_keypoint/rtmpose/hand5/rtmpose_hand5.yml"
+      ],
+      "url": "https://github.com/open-mmlab/mmpose",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "rolpotamias/WiLoR",
+      "revision": "fcb911312a38fa8badd30d9656a167485d61b8f9",
+      "pushed_at": "2026-04-07T09:50:44Z",
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      },
+      "paths": [
+        "demo.py",
+        "gradio_demo.py",
+        "license.txt",
+        "pretrained_models/dataset_config.yaml",
+        "pretrained_models/model_config.yaml"
+      ],
+      "url": "https://github.com/rolpotamias/WiLoR",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    },
+    {
+      "repository": "warmshao/WiLoR-mini",
+      "revision": "ebec42f94c389070cdd7dda6fd1bf0b4a659c960",
+      "pushed_at": "2025-06-14T00:04:37Z",
+      "license": null,
+      "paths": [],
+      "url": "https://github.com/warmshao/WiLoR-mini",
+      "note": "Repository metadata, not a benchmark or a checkpoint training date."
+    }
+  ],
+  "download_head_checks": [
+    {
+      "id": "rtmdet-hand-onnx",
+      "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmdet_nano_8xb32-300e_hand-267f9c8f.zip",
+      "http": 200,
+      "size": "3840129",
+      "etag": "\"076CA52323726D70FE8756EB94A387C1\""
+    },
+    {
+      "id": "rtmpose-hand5-onnx",
+      "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-hand5_pt-aic-coco_210e-256x256-74fb594_20230320.zip",
+      "http": 200,
+      "size": "51270352",
+      "etag": "\"C2CA2948FDCB285531C2E8FA5316B1AE\""
+    },
+    {
+      "id": "mediapipe-hands",
+      "url": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+      "http": 200,
+      "size": "7819105",
+      "etag": "\"15318430ea3851670fe9914116a9cfad\""
+    }
+  ],
+  "license_file_observations": {
+    "rolpotamias/WiLoR": "CC-BY-NC-ND-4.0 in license.txt; MANO and other components separate",
+    "huajian-zeng/stablehand": "MIT in LICENSE; dependencies and model inputs retain their terms",
+    "geopavlakos/hamer": "MIT code; MANO separately licensed",
+    "open-mmlab/mmpose": "Apache-2.0 code; datasets independently licensed",
+    "LinDixuan/OmniHands": "No explicit license located in inspected revision",
+    "DominoAI-Lab/PAD-Hand-CVPR-2026": "No explicit license located in inspected revision"
+  },
+  "limitations": [
+    "No inference benchmark",
+    "No camera capture",
+    "No model training",
+    "HEAD success does not establish integrity, licensing, accuracy or runtime compatibility"
+  ],
+  "implementation_plan_sources": {
+    "consulted_date_local": "2026-10-04",
+    "sources": [
+      {
+        "title": "scrcpy protocol",
+        "url": "https://github.com/Genymobile/scrcpy/blob/master/doc/develop.md"
+      },
+      {
+        "title": "scrcpy camera",
+        "url": "https://github.com/Genymobile/scrcpy/blob/master/doc/camera.md"
+      },
+      {
+        "title": "PyNvVideoCodec decoder",
+        "url": "https://docs.nvidia.com/video-technologies/pynvvideocodec/pynvc-api-reference/decoder.html"
+      },
+      {
+        "title": "PyNvVideoCodec integration",
+        "url": "https://docs.nvidia.com/video-technologies/pynvvideocodec/pynvc-api-prog-guide/using_pynvvideocodec_apis.html"
+      },
+      {
+        "title": "TensorRT",
+        "url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/"
+      },
+      {
+        "title": "TensorRT compatibility",
+        "url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html"
+      },
+      {
+        "title": "MobileNetV3-Small",
+        "url": "https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.mobilenet_v3_small.html"
+      }
+    ],
+    "note": "Implementation proposals, not measured performance."
+  }
+}

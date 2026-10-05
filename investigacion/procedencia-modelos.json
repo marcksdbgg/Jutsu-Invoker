@@ -1,0 +1,387 @@
+{
+  "consulted_local_date": "2026-10-03",
+  "note": "Metadatos de APIs públicas; ausencia de licencia o checkpoint se limita al árbol y ficha consultados. Fechas pushed_at no son fechas de entrenamiento. No incluye datos personales del teléfono.",
+  "entries": [
+    {
+      "repo": "Akram3112/Real-Time-Hand-Sign-Recognition-Pipeline-for-Gaming",
+      "created_at": "2026-05-10T10:46:06Z",
+      "pushed_at": "2026-07-03T13:13:39Z",
+      "license": null,
+      "sha": "b0b286db8c215a9a5a32f87b4e17c013e48ca7d8",
+      "artifacts": [
+        {
+          "path": "model/model_dt.joblib",
+          "size": 80828,
+          "sha": "b57af191f49767928f62f23eaca2a354f6534fa7"
+        },
+        {
+          "path": "model/model_dt_notAugmented.joblib",
+          "size": 43068,
+          "sha": "9f140bc3f4bea43a564e162867cc3cea77518d25"
+        },
+        {
+          "path": "model/mudra_mlp_frame_level.pt",
+          "size": 283559,
+          "sha": "10cd19926fe7d6332a6723e8d745ab56e7664023"
+        }
+      ],
+      "source": "https://github.com/Akram3112/Real-Time-Hand-Sign-Recognition-Pipeline-for-Gaming"
+    },
+    {
+      "repo": "Farrellhrs/naruto-jutsu-recognition",
+      "created_at": "2026-07-12T16:32:39Z",
+      "pushed_at": "2026-07-21T08:41:25Z",
+      "license": null,
+      "sha": "0d46dc3f702fe06ddf071a44556fc15e07416813",
+      "artifacts": [
+        {
+          "path": "hand_gesture_model/naruto-hand-sign-4/phase1_outputs_unified/hand_gesture_rf_unified.mlmodel",
+          "size": 9119229,
+          "sha": "896c222757507083f3f5004026116d377b5db06d"
+        },
+        {
+          "path": "hand_gesture_model/naruto-hand-sign-4/phase1_outputs_unified_v2/hand_gesture_rf_unified.mlmodel",
+          "size": 8369583,
+          "sha": "5047d2f4062b6588a2e6e393030fd9f05396a583"
+        },
+        {
+          "path": "naruto_app/naruto_app/Model/hand_gesture_rf_unified.mlmodel",
+          "size": 8369583,
+          "sha": "5047d2f4062b6588a2e6e393030fd9f05396a583"
+        },
+        {
+          "path": "naruto_app_2/naruto_app_2/Resources/hand_gesture_rf_unified.mlmodel",
+          "size": 8369583,
+          "sha": "5047d2f4062b6588a2e6e393030fd9f05396a583"
+        },
+        {
+          "path": "naruto_app_3/assets/model/hand_sign_rf.onnx",
+          "size": 17948441,
+          "sha": "dd30ce35acdafa751bb27ca38dde8114983c6789"
+        }
+      ],
+      "source": "https://github.com/Farrellhrs/naruto-jutsu-recognition"
+    },
+    {
+      "repo": "GR4Yxx/NarutoHandSignDetection",
+      "created_at": "2026-03-29T23:54:47Z",
+      "pushed_at": "2026-03-29T23:55:18Z",
+      "license": null,
+      "sha": "f5999ee8b26c96896a75b5912c43fa9fe9d55597",
+      "artifacts": [],
+      "source": "https://github.com/GR4Yxx/NarutoHandSignDetection"
+    },
+    {
+      "repo": "Kazuhito00/NARUTO-HandSignDetection",
+      "created_at": "2020-10-03T06:58:01Z",
+      "pushed_at": "2023-07-10T01:06:40Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "sha": "07f4d3231f43f97cbd37653c793825f1dbc94d0e",
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "size": 1074,
+          "sha": "26a63bd74038f12bd6e3af1eb46057faaa55c347"
+        },
+        {
+          "path": "_legacy/v2/model/MobileNetV2_SSD_FPNLite_640x640/tflite/model.tflite",
+          "size": 12099440,
+          "sha": "d871189e674f22512cccdaab227bc36381339335"
+        },
+        {
+          "path": "model/yolox/yolox_nano.onnx",
+          "size": 3610160,
+          "sha": "41ba540d4281d07182dc10dff264efc90a13266d"
+        },
+        {
+          "path": "model/yolox/yolox_nano_with_post.onnx",
+          "size": 4000060,
+          "sha": "5e32cc04e1ae4b1ddba2b947149474cff854cbd2"
+        }
+      ],
+      "source": "https://github.com/Kazuhito00/NARUTO-HandSignDetection"
+    },
+    {
+      "repo": "NabilCollison-Cofie/Naruto-Hand-Sign-Recognition-Project",
+      "created_at": "2025-09-05T23:30:02Z",
+      "pushed_at": "2026-09-08T09:16:03Z",
+      "license": null,
+      "sha": "e6de58fafbbace1d1080b409a3cd3ce25b8b0fdb",
+      "artifacts": [
+        {
+          "path": "Naruto/models/naruto_hand_signs_model.h5",
+          "size": 265576,
+          "sha": "2479b0121eb99781d8422fd2d66e0ab748aacde2"
+        },
+        {
+          "path": "Naruto/models/naruto_hand_signs_model2.0.h5",
+          "size": 265576,
+          "sha": "65e550d3ee866e67fed023e2edd541b1da3a6bc9"
+        }
+      ],
+      "source": "https://github.com/NabilCollison-Cofie/Naruto-Hand-Sign-Recognition-Project"
+    },
+    {
+      "repo": "ParshvCrafts/Naruto",
+      "created_at": "2026-04-14T07:17:23Z",
+      "pushed_at": "2026-08-29T17:08:14Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "sha": "f17d9a7eceec5b0361c6446d35ca5680c6a2b714",
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "size": 1069,
+          "sha": "45abb0a33fbbf191ea8ec66d219953a81de48b9f"
+        }
+      ],
+      "source": "https://github.com/ParshvCrafts/Naruto"
+    },
+    {
+      "repo": "anhnguyen1204/Naruto_Jutsu_Detection",
+      "created_at": "2026-05-01T02:56:28Z",
+      "pushed_at": "2026-05-01T23:01:53Z",
+      "license": null,
+      "sha": "c756824728c919310a6d9137d91e0852195cbd45",
+      "artifacts": [
+        {
+          "path": "model/gnn.pt",
+          "size": 691479,
+          "sha": "54f11a63a93c79faded7923deeadbd61ac1a9114"
+        },
+        {
+          "path": "model/mobilenet_v2.pt",
+          "size": 10461690,
+          "sha": "630ca76ea6f297d2cde21677e1b85f0fa3b76cf1"
+        },
+        {
+          "path": "model/squeezenet1_1.pt",
+          "size": 2933962,
+          "sha": "0d0279b6f66671dab9312c9336117e285836ba97"
+        }
+      ],
+      "source": "https://github.com/anhnguyen1204/Naruto_Jutsu_Detection"
+    },
+    {
+      "repo": "hqrris0n/gesture-detection",
+      "created_at": "2024-09-12T02:01:57Z",
+      "pushed_at": "2026-08-26T23:10:35Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "sha": "a35b554743b1361392da192f86d406ed487b0c0a",
+      "artifacts": [
+        {
+          "path": "LICENSE.md",
+          "size": 1095,
+          "sha": "300537fa2daf805c1efdd21b8013e979e8a3aad7"
+        },
+        {
+          "path": "myModels/mainv1/best.pt",
+          "size": 6266915,
+          "sha": "d2d3ae375fb5bdaf163ce28eb55e033fc27f1631"
+        }
+      ],
+      "source": "https://github.com/hqrris0n/gesture-detection"
+    },
+    {
+      "repo": "huanglizhuo/Ketsuin",
+      "created_at": "2026-02-14T15:37:44Z",
+      "pushed_at": "2026-08-10T16:39:46Z",
+      "license": null,
+      "sha": "6b18f39baa9637c4c12a8d9c891905c1e5093b77",
+      "artifacts": [
+        {
+          "path": "unused_assets/model/yolox_nano.onnx",
+          "size": 3610160,
+          "sha": "41ba540d4281d07182dc10dff264efc90a13266d"
+        }
+      ],
+      "source": "https://github.com/huanglizhuo/Ketsuin"
+    },
+    {
+      "repo": "jajamchlramoji/NarutoHandSignJutsu",
+      "created_at": "2026-09-30T20:43:45Z",
+      "pushed_at": "2026-10-01T21:01:40Z",
+      "license": null,
+      "sha": "a722e759c3595b180a1956cbf3f403c4484605a6",
+      "artifacts": [],
+      "source": "https://github.com/jajamchlramoji/NarutoHandSignJutsu"
+    },
+    {
+      "repo": "jeyaletheia/NARUTO-CODING",
+      "created_at": "2025-07-26T16:07:09Z",
+      "pushed_at": "2025-07-28T09:31:59Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "sha": "d2716b6ebb8d0a0f40776d89179f8d9b0da9d641",
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "size": 1074,
+          "sha": "26a63bd74038f12bd6e3af1eb46057faaa55c347"
+        },
+        {
+          "path": "model/yolox/yolox_nano.onnx",
+          "size": 3610160,
+          "sha": "41ba540d4281d07182dc10dff264efc90a13266d"
+        },
+        {
+          "path": "model/yolox/yolox_nano_with_post.onnx",
+          "size": 4000060,
+          "sha": "5e32cc04e1ae4b1ddba2b947149474cff854cbd2"
+        }
+      ],
+      "source": "https://github.com/jeyaletheia/NARUTO-CODING"
+    },
+    {
+      "repo": "lucasfernandoprojects/hand-sign-detection",
+      "created_at": "2024-05-09T01:44:34Z",
+      "pushed_at": "2024-06-26T12:45:12Z",
+      "license": {
+        "key": "gpl-3.0",
+        "name": "GNU General Public License v3.0",
+        "spdx_id": "GPL-3.0",
+        "url": "https://api.github.com/licenses/gpl-3.0",
+        "node_id": "MDc6TGljZW5zZTk="
+      },
+      "sha": "4add57be0bbedabac4230e770ab4735ef06e763e",
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "size": 35149,
+          "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+        },
+        {
+          "path": "models/best.pt",
+          "size": 6241113,
+          "sha": "d84ac15bdd77f870081f6ec0ba931b19ac91e756"
+        },
+        {
+          "path": "models/last.pt",
+          "size": 6243033,
+          "sha": "15f03bd379995e41276c7d7034a343f5690da3dc"
+        },
+        {
+          "path": "models/yolov8n.pt",
+          "size": 6534387,
+          "sha": "d61ef50d3a524afa8d7a9f6e577bc329dbe9ac26"
+        }
+      ],
+      "source": "https://github.com/lucasfernandoprojects/hand-sign-detection"
+    },
+    {
+      "repository": "hqrris0n/gesture-detection",
+      "path": "myModels/mainv1/best.pt",
+      "sha": "eef3b03af6ed7d3988ab6a2e369c12c58a4ac94e",
+      "committer_date": "2024-09-12T02:36:59Z",
+      "message": "Initial Commit",
+      "source": "https://github.com/hqrris0n/gesture-detection"
+    },
+    {
+      "repository": "Kazuhito00/NARUTO-HandSignDetection",
+      "path": "model/yolox/yolox_nano.onnx",
+      "sha": "2183fc8ca8b6f5244a0e53baea1d595e5ca4d43d",
+      "committer_date": "2022-04-21T23:42:19Z",
+      "message": "YOLOX-Nano追加トレーニング分更新。",
+      "source": "https://github.com/Kazuhito00/NARUTO-HandSignDetection"
+    },
+    {
+      "repository": "NabilCollison-Cofie/Naruto-Hand-Sign-Recognition-Project",
+      "path": "Naruto/models/naruto_hand_signs_model2.0.h5",
+      "sha": "e6de58fafbbace1d1080b409a3cd3ce25b8b0fdb",
+      "committer_date": "2026-09-08T09:00:08Z",
+      "message": "New Files",
+      "source": "https://github.com/NabilCollison-Cofie/Naruto-Hand-Sign-Recognition-Project"
+    },
+    {
+      "repo": "yaxan/Naruto_Handsign_Classification",
+      "created_at": "2022-06-19T01:42:02Z",
+      "pushed_at": "2024-08-20T00:37:14Z",
+      "license": null,
+      "sha": "e766bf735bad41bc73171205b29a9c0a4ad24d14",
+      "artifacts": [],
+      "source": "https://github.com/yaxan/Naruto_Handsign_Classification"
+    },
+    {
+      "id": "eeshawn11/naruto_hand_seal_detection",
+      "lastModified": "2023-03-10T13:36:00.000Z",
+      "createdAt": "2023-03-09T08:34:00.000Z",
+      "sha": "2eadcbf947075d51d0f167e5e60ef0f08d2b251c",
+      "cardData": {
+        "tags": [
+          "ultralyticsplus",
+          "yolov8",
+          "ultralytics",
+          "yolo",
+          "vision",
+          "object-detection",
+          "pytorch"
+        ],
+        "library_name": "ultralytics",
+        "library_version": "8.0.43",
+        "inference": false,
+        "model-index": [
+          {
+            "name": "eeshawn11/naruto_hand_seal_detection",
+            "results": [
+              {
+                "task": {
+                  "type": "object-detection"
+                },
+                "metrics": [
+                  {
+                    "type": "precision",
+                    "value": 0.995,
+                    "name": "mAP@0.5(box)",
+                    "verified": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "siblings": [
+        {
+          "rfilename": ".gitattributes"
+        },
+        {
+          "rfilename": "README.md"
+        },
+        {
+          "rfilename": "config.json"
+        },
+        {
+          "rfilename": "events.out.tfevents.1678270321.0507676b1202.22.0"
+        },
+        {
+          "rfilename": "naruto_hand_seal_detection.pt"
+        },
+        {
+          "rfilename": "thumbnail.jpg"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,363 @@
+{
+  "checked_date": "2026-10-04",
+  "method": "GitHub API; repository language does not prove author nationality",
+  "repositories": [
+    {
+      "repository": "Kazuhito00/NARUTO-HandSignDetection",
+      "revision": "07f4d3231f43f97cbd37653c793825f1dbc94d0e",
+      "pushed_at": "2023-07-10T01:06:40Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "tree_truncated": false,
+      "artifacts": [
+        {
+          "path": ".vscode/launch.json",
+          "bytes": 736,
+          "git_blob_sha1": "cc9b2e7a3769408fc73a0471d7a5091c21e2b28e"
+        },
+        {
+          "path": "LICENSE",
+          "bytes": 1074,
+          "git_blob_sha1": "26a63bd74038f12bd6e3af1eb46057faaa55c347"
+        },
+        {
+          "path": "_legacy/v2/model/MobileNetV2_SSD_FPNLite_640x640/tflite/model.tflite",
+          "bytes": 12099440,
+          "git_blob_sha1": "d871189e674f22512cccdaab227bc36381339335"
+        },
+        {
+          "path": "_legacy/v2/setting/jutsu.csv",
+          "bytes": 1702,
+          "git_blob_sha1": "8fe927bd77ac34608234c59a9e7445865cc5bb13"
+        },
+        {
+          "path": "_legacy/v2/setting/labels.csv",
+          "bytes": 237,
+          "git_blob_sha1": "1a4e1747e1bc42e90615d4ec6cecd61f19ff8f3c"
+        },
+        {
+          "path": "model/yolox/yolox_nano.onnx",
+          "bytes": 3610160,
+          "git_blob_sha1": "41ba540d4281d07182dc10dff264efc90a13266d"
+        },
+        {
+          "path": "model/yolox/yolox_nano_with_post.onnx",
+          "bytes": 4000060,
+          "git_blob_sha1": "5e32cc04e1ae4b1ddba2b947149474cff854cbd2"
+        },
+        {
+          "path": "setting/jutsu.csv",
+          "bytes": 1702,
+          "git_blob_sha1": "8fe927bd77ac34608234c59a9e7445865cc5bb13"
+        },
+        {
+          "path": "setting/labels.csv",
+          "bytes": 237,
+          "git_blob_sha1": "1a4e1747e1bc42e90615d4ec6cecd61f19ff8f3c"
+        }
+      ]
+    },
+    {
+      "repository": "jeyaletheia/NARUTO-CODING",
+      "revision": "d2716b6ebb8d0a0f40776d89179f8d9b0da9d641",
+      "pushed_at": "2025-07-28T09:31:59Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "tree_truncated": false,
+      "artifacts": [
+        {
+          "path": ".vscode/launch.json",
+          "bytes": 736,
+          "git_blob_sha1": "cc9b2e7a3769408fc73a0471d7a5091c21e2b28e"
+        },
+        {
+          "path": "LICENSE",
+          "bytes": 1074,
+          "git_blob_sha1": "26a63bd74038f12bd6e3af1eb46057faaa55c347"
+        },
+        {
+          "path": "model/yolox/yolox_nano.onnx",
+          "bytes": 3610160,
+          "git_blob_sha1": "41ba540d4281d07182dc10dff264efc90a13266d"
+        },
+        {
+          "path": "model/yolox/yolox_nano_with_post.onnx",
+          "bytes": 4000060,
+          "git_blob_sha1": "5e32cc04e1ae4b1ddba2b947149474cff854cbd2"
+        },
+        {
+          "path": "setting/jutsu.csv",
+          "bytes": 1645,
+          "git_blob_sha1": "475fe8fb5539711c6fd90a743dd511436aa8afdf"
+        },
+        {
+          "path": "setting/labels.csv",
+          "bytes": 237,
+          "git_blob_sha1": "1a4e1747e1bc42e90615d4ec6cecd61f19ff8f3c"
+        }
+      ]
+    },
+    {
+      "repository": "anhnguyen1204/Naruto_Jutsu_Detection",
+      "revision": "c756824728c919310a6d9137d91e0852195cbd45",
+      "pushed_at": "2026-05-01T23:01:53Z",
+      "license": null,
+      "tree_truncated": false,
+      "artifacts": [
+        {
+          "path": "hand_landmarker.task",
+          "bytes": 7819105,
+          "git_blob_sha1": "0d53faf3786146e95c5bc010c48029ff16b7fa59"
+        },
+        {
+          "path": "model/gnn.pt",
+          "bytes": 691479,
+          "git_blob_sha1": "54f11a63a93c79faded7923deeadbd61ac1a9114"
+        },
+        {
+          "path": "model/label_map.json",
+          "bytes": 199,
+          "git_blob_sha1": "b529bdf075340dea40374110cd293875fc113d9a"
+        },
+        {
+          "path": "model/label_map_gnn.json",
+          "bytes": 199,
+          "git_blob_sha1": "b529bdf075340dea40374110cd293875fc113d9a"
+        },
+        {
+          "path": "model/mobilenet_v2.pt",
+          "bytes": 10461690,
+          "git_blob_sha1": "630ca76ea6f297d2cde21677e1b85f0fa3b76cf1"
+        },
+        {
+          "path": "model/squeezenet1_1.pt",
+          "bytes": 2933962,
+          "git_blob_sha1": "0d0279b6f66671dab9312c9336117e285836ba97"
+        }
+      ]
+    },
+    {
+      "repository": "yaxan/Naruto_Handsign_Classification",
+      "revision": "e766bf735bad41bc73171205b29a9c0a4ad24d14",
+      "pushed_at": "2024-08-20T00:37:14Z",
+      "license": null,
+      "tree_truncated": false,
+      "artifacts": []
+    },
+    {
+      "repository": "PINTO0309/hand-gesture-recognition-using-onnx",
+      "revision": "e2deb2e024c855b2d7d875975c4ff3f636b6e83b",
+      "pushed_at": "2026-01-06T06:46:23Z",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "tree_truncated": false,
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "bytes": 11343,
+          "git_blob_sha1": "436eb20cdb3f231d6569b4eaa12ffae6413cc6a8"
+        },
+        {
+          "path": "model/hand_landmark/hand_landmark_sparse_Nx3x224x224.onnx",
+          "bytes": 10631867,
+          "git_blob_sha1": "5ba7288ab4658d9b4412a45fd97344a603d468d7"
+        },
+        {
+          "path": "model/keypoint_classifier/keypoint.csv",
+          "bytes": 3383343,
+          "git_blob_sha1": "456cba9e569d7f1e36660381b57ef97e782ee41b"
+        },
+        {
+          "path": "model/keypoint_classifier/keypoint_classifier.onnx",
+          "bytes": 6071,
+          "git_blob_sha1": "08cf26f223dfc0eb843396ed8410abe1b88daa7c"
+        },
+        {
+          "path": "model/keypoint_classifier/keypoint_classifier.tflite",
+          "bytes": 6224,
+          "git_blob_sha1": "b60932e2c393bf4553b509efccb014379840a50c"
+        },
+        {
+          "path": "model/keypoint_classifier/keypoint_classifier_label.csv",
+          "bytes": 25,
+          "git_blob_sha1": "2c3ce63c40c6a555792b08fcded8c73745c7006c"
+        },
+        {
+          "path": "model/palm_detection/palm_detection_full_inf_post_192x192.onnx",
+          "bytes": 4842332,
+          "git_blob_sha1": "b6a4d6b2a90060555a746f55e69ae7bf804525a0"
+        },
+        {
+          "path": "model/point_history_classifier/argmax.onnx",
+          "bytes": 559,
+          "git_blob_sha1": "8caa243475b5842eefcb4d5a924300592a5d360d"
+        },
+        {
+          "path": "model/point_history_classifier/point_history.csv",
+          "bytes": 1751934,
+          "git_blob_sha1": "c304cdda4d1cdc1aed057f4b38f0acb8e54750ca"
+        },
+        {
+          "path": "model/point_history_classifier/point_history_classifier.onnx",
+          "bytes": 6482,
+          "git_blob_sha1": "46419b9b7ae51b9f243bd48a4f70e3f68cc82a6b"
+        },
+        {
+          "path": "model/point_history_classifier/point_history_classifier.tflite",
+          "bytes": 6144,
+          "git_blob_sha1": "7704cb28874fcd5d7b3e8c28655590887030550a"
+        },
+        {
+          "path": "model/point_history_classifier/point_history_classifier_label.csv",
+          "bytes": 45,
+          "git_blob_sha1": "411a29890b19a6f64784b39ae3a70cfa2898e5d3"
+        },
+        {
+          "path": "model/point_history_classifier/point_history_classifier_lstm.onnx",
+          "bytes": 22200,
+          "git_blob_sha1": "4e360260fc954aecab8dae56b217ec2d6e821410"
+        }
+      ]
+    },
+    {
+      "repository": "yogendrarau/sealwork",
+      "revision": "df7dbc96e6bc95a59afe2aa9ba84b6582e3a6745",
+      "pushed_at": "2026-08-02T01:45:55Z",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "tree_truncated": false,
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "bytes": 1073,
+          "git_blob_sha1": "50fa4eb5613e0e9afbaca96c63ed18622a4edd14"
+        },
+        {
+          "path": "models/mlp.onnx",
+          "bytes": 269464,
+          "git_blob_sha1": "89f7a467b22f9bc0d8a27e2481dd74e307b8b2e2"
+        },
+        {
+          "path": "models/parity.json",
+          "bytes": 806,
+          "git_blob_sha1": "7c6575c9280b148b2097f3f5f18665652fdb172b"
+        },
+        {
+          "path": "models/signs.json",
+          "bytes": 106,
+          "git_blob_sha1": "59201ff47209326ff144310e7bbb103313373a17"
+        },
+        {
+          "path": "server/package-lock.json",
+          "bytes": 845,
+          "git_blob_sha1": "8f95524e0ba3b78f6b2997704e7705dffdd81cb7"
+        },
+        {
+          "path": "server/package.json",
+          "bytes": 264,
+          "git_blob_sha1": "02fe1c5fea7dd01efb521dedad320af884f7c52e"
+        },
+        {
+          "path": "web/mlp.onnx",
+          "bytes": 269464,
+          "git_blob_sha1": "89f7a467b22f9bc0d8a27e2481dd74e307b8b2e2"
+        },
+        {
+          "path": "web/parity.json",
+          "bytes": 806,
+          "git_blob_sha1": "7c6575c9280b148b2097f3f5f18665652fdb172b"
+        },
+        {
+          "path": "web/signs.json",
+          "bytes": 106,
+          "git_blob_sha1": "59201ff47209326ff144310e7bbb103313373a17"
+        }
+      ]
+    },
+    {
+      "repository": "bunkerapps/Jutsu-Hero",
+      "revision": "10c5a914f9f14b4427d988d253048bf0fae8eb52",
+      "pushed_at": "2026-09-08T02:36:10Z",
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      },
+      "tree_truncated": false,
+      "artifacts": [
+        {
+          "path": "LICENSE",
+          "bytes": 4877,
+          "git_blob_sha1": "0c340e8d08344e00651941603f590efec7ac5283"
+        },
+        {
+          "path": "LICENSE-ASSETS",
+          "bytes": 1829,
+          "git_blob_sha1": "db0192ebfcdcc85f03f865fc3b2de5ea2bf0adb6"
+        },
+        {
+          "path": "package-lock.json",
+          "bytes": 46757,
+          "git_blob_sha1": "93831c70fe0f3e9e1a311d8ceb4db95f06578886"
+        },
+        {
+          "path": "package.json",
+          "bytes": 489,
+          "git_blob_sha1": "8a1e5d407709ce3e96d48927e95cdadfebd3bfcc"
+        },
+        {
+          "path": "public/assets/data/beatmaps.json",
+          "bytes": 3908,
+          "git_blob_sha1": "274026d41c82e78b7163fffb188b73b5e5e37023"
+        },
+        {
+          "path": "public/assets/data/difficulty.json",
+          "bytes": 608,
+          "git_blob_sha1": "2dce7a5760d6dbfd45a1a85b7b2b3a90220aea2b"
+        },
+        {
+          "path": "public/assets/data/jutsus.json",
+          "bytes": 3177,
+          "git_blob_sha1": "7ca0257592ded1a329bf5c1191a6c567ee1d4c4f"
+        },
+        {
+          "path": "public/assets/data/seals.json",
+          "bytes": 1652,
+          "git_blob_sha1": "416051308ffa48c1710dd7a55a5f6424b199ce6d"
+        },
+        {
+          "path": "public/assets/seal_classifier.onnx",
+          "bytes": 258502,
+          "git_blob_sha1": "2ce343f06ab523191a66475e6ea58b90a2faa9cf"
+        },
+        {
+          "path": "tsconfig.json",
+          "bytes": 362,
+          "git_blob_sha1": "ede98f8c29e3d081e5b6ae4a9f6884b5641b2bc6"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "schema_version": 3,
+  "status": "live_android_nvdec_tensorrt_trainer",
+  "recipe_spec": "mapa-recetas.json",
+  "mapping": {
+    "Q": "monkey",
+    "W": "tiger",
+    "E": "horse",
+    "R": "snake"
+  },
+  "capture": {
+    "source": "android_usb",
+    "preferred_size": [
+      1280,
+      720
+    ],
+    "target_fps": 30,
+    "fallback_fps": 30,
+    "hardware_mode_verified": true,
+    "queue_capacity": 1,
+    "drop_policy": "replace_pending_with_latest"
+  },
+  "gpu_candidate": {
+    "detector": "rtmdet_nano_hand",
+    "pose": "rtmpose_m_hand5",
+    "pose_input": [
+      256,
+      256
+    ],
+    "max_hands": 2,
+    "batching_to_benchmark": [
+      1,
+      2
+    ],
+    "keypoints_per_hand": 21,
+    "dimensions": "2d",
+    "model_urls": [
+      {
+        "id": "rtmdet-hand-onnx",
+        "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmdet_nano_8xb32-300e_hand-267f9c8f.zip",
+        "http": 200,
+        "size": "3840129",
+        "etag": "\"076CA52323726D70FE8756EB94A387C1\""
+      },
+      {
+        "id": "rtmpose-hand5-onnx",
+        "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-hand5_pt-aic-coco_210e-256x256-74fb594_20230320.zip",
+        "http": 200,
+        "size": "51270352",
+        "etag": "\"C2CA2948FDCB285531C2E8FA5316B1AE\""
+      }
+    ],
+    "status": "optional_after_rgb_pilot"
+  },
+  "appearance_branch": {
+    "roi": "both_hands_with_margin",
+    "reference": "modelo-referencia.json",
+    "personalized_checkpoint": null,
+    "training_required": false,
+    "selected_backbone": "mobilenet_v3_small",
+    "input_size": [
+      224,
+      224
+    ],
+    "status": "optional_personalization_after_evaluation",
+    "training_required_if_selected": true
+  },
+  "fusion": {
+    "type_candidates": [
+      "small_causal_gru",
+      "small_causal_tcn"
+    ],
+    "history_frames_to_compare": [
+      4,
+      6,
+      8
+    ],
+    "lookahead_frames": 0,
+    "training_required": true,
+    "classes": [
+      "monkey",
+      "tiger",
+      "horse",
+      "snake",
+      "transition",
+      "unknown"
+    ],
+    "selected_type": "small_causal_tcn",
+    "status": "optional_after_measured_errors"
+  },
+  "features": [
+    "normalized_intra_hand_bone_vectors",
+    "joint_angles",
+    "tip_palm_distances",
+    "image_relative_wrist_positions",
+    "hand_orientations",
+    "joint_missing_mask",
+    "tracking_identity_consistency",
+    "blur_quality",
+    "rgb_embedding"
+  ],
+  "quality_rules": [
+    "Do not treat handedness or hand presence as per-joint visibility",
+    "Do not subtract per-hand local world coordinates as if origins were shared",
+    "Do not sort hand identities only by screen x",
+    "Allow appearance evidence when one hand is occluded",
+    "Do not emit commands from extrapolated geometry alone",
+    "Reject stale frames and ambiguous transitions"
+  ],
+  "confirmation": {
+    "sign": "snake",
+    "requires_valid_recipe": true,
+    "requires_fresh_visual_evidence": true,
+    "stricter_than_element_threshold": true,
+    "numeric_thresholds": "calibrate_on_held_out_sessions",
+    "one_event_until_released": true
+  },
+  "output": "local_trainer_only",
+  "advanced_comparators": [
+    "WiLoR --fast",
+    "OmniHands image variant"
+  ],
+  "research_not_live_defaults": [
+    "StableHand",
+    "PAD-Hand"
+  ],
+  "acceptance_targets_not_results": {
+    "formed_sign_to_event_p95_ms": 150,
+    "dota_median_fps_loss_fraction_max": 0.05,
+    "pilot_complete_recipe_accuracy_min": 0.95,
+    "report_rejection_coverage": true,
+    "report_false_confirmations_per_hour": true,
+    "additional_vram_gib": 1.5,
+    "cpu_mean_logical_threads": 0.5
+  },
+  "updated_date": "2026-10-04",
+  "implementation_plan": "../PLAN-DE-IMPLEMENTACION.md",
+  "runtime_config": "../config/desarrollo-gpu.toml",
+  "compute_policy": {
+    "primary": "gpu",
+    "device": "cuda:0",
+    "decoder": "NVDEC via PyNvVideoCodec Core Decoder",
+    "preprocessing": "CUDA",
+    "network_runtime": "TensorRT 11.3 FP32; ORT CUDA reference",
+    "network_precision": "FP32 validated; FP16 optional",
+    "geometry_precision": "FP32",
+    "appearance": "pretrained Naruto YOLOX joint image",
+    "temporal": "timestamp state machine; TCN optional",
+    "training": "PyTorch CUDA outside game session",
+    "allow_heavy_cpu_fallback": false,
+    "cpu_tasks": [
+      "USB and compressed packets",
+      "state machine and small events",
+      "GSI and UI control"
+    ]
+  },
+  "historical_cpu_reference_not_in_implementation": {
+    "name": "MediaPipe Hand Landmarker",
+    "num_hands": 2,
+    "model_url": {
+      "id": "mediapipe-hands",
+      "url": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+      "http": 200,
+      "size": "7819105",
+      "etag": "\"15318430ea3851670fe9914116a9cfad\""
+    }
+  },
+  "initial_pipeline": {
+    "model": "naruto_yolox_nano_pretrained",
+    "manifest": "../modelos/manifiesto-naruto.json",
+    "input": [
+      1,
+      3,
+      416,
+      416
+    ],
+    "output": [
+      1,
+      3549,
+      21
+    ],
+    "color": "BGR",
+    "range": [
+      0,
+      255
+    ],
+    "normalization": "none",
+    "padding": 114,
+    "runtime": "TensorRT 11.3 FP32 direct CUDA binding",
+    "preprocessing": "CUDA",
+    "nms": "CUDA",
+    "temporal": "timestamp_acceptance_state_machine",
+    "accuracy_measured": false,
+    "camera_connected": true,
+    "gpu_profile_checked": true
+  },
+  "implementation_evidence": {
+    "gpu_smoke": "../runtime/smoke-naruto-cuda.json",
+    "unit_tests": "../tests",
+    "camera_nvdec_tensorrt": "implemented",
+    "nvdec": "../runtime/smoke-nvdec.json",
+    "tensorrt": "../runtime/smoke-tensorrt.json",
+    "tensorrt_parity": "../runtime/paridad-tensorrt.json",
+    "live": "../runtime/live-validation.json"
+  },
+  "active_diagnostic_landmarks": {
+    "manifest": "../modelos/manifiesto-articulaciones.json",
+    "detector": "rtmdet_nano_hand",
+    "pose": "rtmpose_m_hand5",
+    "backend": "onnxruntime_cuda_fp32",
+    "cpu_fallback": false,
+    "target_hz": 15,
+    "max_hands": 2,
+    "affects_seal_decision": false,
+    "preview_pts_max_delta_us": 150000,
+    "valid_at_camera": true,
+    "joint_accuracy_measured": false
+  }
+}

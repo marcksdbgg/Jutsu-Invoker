@@ -1,0 +1,7 @@
+Correcto: 27 cadenas literales → 10 recetas.
+Correcto: multiplicidades 3×1 + 6×3 + 1×6 = 27.
+Correcto: 10 fórmulas canónicas compactas → las mismas 10 recetas.
+Correcto: 15 secuencias compactas aceptadas al admitir 6 permutaciones de QWE.
+Correcto: todas requieren confirmación final; entradas inválidas rechazadas.
+Media uniforme de eventos de sello compactos, incluida serpiente: 2.8.
+No valida cámara, detección temporal, rendimiento, Dota ni condiciones de uso.
