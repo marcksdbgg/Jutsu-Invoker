@@ -72,3 +72,5 @@ Después de corregir los cortes breves, GSI confirmó Chaos Meteor tras E→W→
 La nueva confirmación de lanzamiento ya registró en GSI real el inicio de recarga de Chaos Meteor, Ghost Walk y EMP en D, y Tornado en F. Ninguna acción del enlace incluyó D/F. La escucha de los cinco recortes queda pendiente de confirmación del usuario.
 
 El usuario confirmó la escucha del cuarto golpe en serpiente y del quinto al lanzar manualmente. A petición suya se redujo solo la ganancia del remate de 0,95 a 0,72 (24 % menos, −2,4 dB); los sellos y el volumen general conservan su nivel.
+
+Comprobación posterior real: GSI confirmó Sun Strike, Cold Snap y Chaos Meteor preparados tras registrar la firma nueva. El enlace permaneció armado y activo; no reapareció el bloqueo por cambios de controles. También se registraron cancelaciones por entrada manual o pérdida de foco, que siguen invalidando el envío. Ninguna acción incluyó D/F. Evidencia sanitizada en `runtime/dota-live-validation.json`, no versionada.
