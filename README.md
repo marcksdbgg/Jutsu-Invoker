@@ -83,6 +83,8 @@ En una instalación nueva, registra la ruta del juego y el archivo de controles 
 
 `--bindings` debe señalar el archivo VDF real de controles de tu cuenta; [el lector](src/jutsu_invoker/dota.py) exige teclas simples distintas para orbes, Invoke, selección de héroe y las dos ranuras de lanzamiento. La integración genera un token local y la configuración GSI; ambos quedan fuera de Git.
 
+El enlace comprueba los controles efectivos antes de enviar: una reescritura de formato, metadatos o teclas ajenas no lo desactiva. Cambiar controles de habilidades, modificadores, modos o añadir órdenes sobre las teclas protegidas sí lo bloquea. Una instalación antigua conserva la comprobación estricta del archivo hasta volver a ejecutar `install-dota`.
+
 En Steam → Dota 2 → Propiedades → Opciones de lanzamiento añade **`-gamestateintegration`**, conservando las demás opciones, y reinicia Dota.
 
 ```bash
@@ -129,7 +131,7 @@ scripts/run_tests.sh
 .venv/bin/python scripts/preflight.py --output runtime/preflight.json
 ```
 
-La suite verificada contiene **108 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
+La suite verificada contiene **114 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
 
 En el panel, **Prueba de precisión** guía poses aisladas o las diez recetas. Los informes y grabaciones se guardan solo en `datos/evaluaciones/` y `datos/clips/`. Un informe es provisional hasta confirmar que se ejecutaron las poses, y necesita revisión del vídeo para una evaluación independiente.
 

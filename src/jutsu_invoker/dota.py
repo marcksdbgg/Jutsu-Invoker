@@ -82,6 +82,23 @@ def read_controls(path):
     return {'keys':result,'select_key':extra['HeroSelect'],'cast_keys':[extra['AbilitySecondary1'],extra['AbilitySecondary2']]}
 
 
+def controls_signature(path, controls=None):
+    """Relevant effective bindings, independent of formatting and unrelated keys."""
+    controls = controls or read_controls(path)
+    spec = parse_vdf_keys(Path(path).read_text())['KeyBindings']
+    protected = set(controls['keys'].values()) | {controls['select_key']} | set(controls['cast_keys'])
+    relevant = {}
+    for role, binding in effective_keys(spec).items():
+        if not isinstance(binding, dict):
+            continue
+        key = str(binding.get('Key', '')).lower()
+        if role.startswith('Ability') or role == 'HeroSelect' or key in protected:
+            relevant[role] = {'key':key, 'modifier':str(binding.get('Modifier', 'None')).lower(),
+                              'mode':str(binding.get('Mode', '0'))}
+    return {'bindings':relevant, 'per_unit_keybinds':str(spec.get('PerUnitKeybinds', '0')),
+            'use_hero_bindings':str(spec.get('UseHeroBindings', '0'))}
+
+
 def install_gsi(root, game_dir, bindings):
     game_dir=Path(game_dir).resolve();bindings=Path(bindings).resolve()
     if not (game_dir/'game/dota/cfg').is_dir():raise ValueError('Directorio de Dota inválido')
@@ -130,7 +147,8 @@ def install_gsi(root, game_dir, bindings):
             backup=directory/('previous-autoexec-'+str(time.time_ns())+'.cfg');backup.write_bytes(autoexec.read_bytes())
             autoexec.write_text(remaining)
     config={'transport':'direct','input_keys':{**keys,'select':controls['select_key']},'steamid':str(76561197960265728+int(account)),'game_dir':str(game_dir),'bindings':str(bindings),'keys':keys,'gsi_token':token,
-            **controls,'port':32148,'bindings_sha256':hashlib.sha256(bindings.read_bytes()).hexdigest()}
+            **controls,'port':32148,'bindings_sha256':hashlib.sha256(bindings.read_bytes()).hexdigest(),
+            'controls_signature':controls_signature(bindings, controls)}
     config_path.write_text(json.dumps(config,indent=2)+'\n');os.chmod(config_path,0o600)
     return {'status':'installed','gsi_config':str(target),'keys':keys,'requires_launch_option':'-gamestateintegration'}
 
@@ -312,11 +330,17 @@ class DotaIntegration:
 
     def verify_controls(self):
         self.verify_input_config()
-        expected=self.config.get('bindings_sha256')
-        if expected and hashlib.sha256(Path(self.config['bindings']).read_bytes()).hexdigest()!=expected:
-            raise RuntimeError('Las teclas de Dota cambiaron')
         if read_controls(self.config['bindings'])!={k:self.config[k] for k in ['keys','select_key','cast_keys']}:
             raise RuntimeError('Las teclas de Dota cambiaron')
+        signature=self.config.get('controls_signature')
+        if signature is not None:
+            if controls_signature(self.config['bindings'])!=signature:
+                raise RuntimeError('Las teclas de Dota cambiaron')
+        else:
+            # Legacy installations retain the strict check until explicitly installed again.
+            expected=self.config.get('bindings_sha256')
+            if expected and hashlib.sha256(Path(self.config['bindings']).read_bytes()).hexdigest()!=expected:
+                raise RuntimeError('Las teclas de Dota cambiaron')
 
     def arm(self):
         with self.lock:

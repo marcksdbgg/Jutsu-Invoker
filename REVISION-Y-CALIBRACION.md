@@ -136,3 +136,12 @@ Se separó la aceptación de tigre de la de caballo. Tigre conserva score ≥0,8
 Replay de las mismas 22 pruebas medidas de poses/repose del 4 de octubre: cuatro intentos de tigre aceptados en ambos perfiles; cero aceptaciones W en los otros 18. Desde la primera evidencia fiable de tigre, los tiempos pasan de [825,06; 297,02; 165,01; 165,01] ms a [330,03; 231,02; 99,01; 99,01] ms. Son pruebas retrospectivas de la toma usada para calibrar, no una nueva medida de precisión ni latencia desde el sensor. Informe local no versionado: `runtime/tiger-latency-replay.json`.
 
 El refinamiento continúa exigiendo espejo y contexto independientes con score ≥0,85. Si el espejo falla, se omite la segunda inferencia, pues el acuerdo ya es imposible; no se altera la clasificación. No se atribuye una mejora de latencia GPU medida a este ahorro. La [guía primaria de MediaPipe](https://ai.google.dev/edge/api/mediapipe/python/mp/tasks/vision/GestureRecognizer) también describe el descarte de imágenes para reducir latencia en streaming; aquí se conserva el productor existente con una sola imagen pendiente y timestamps frescos, sin añadir otro modelo. Suite: 108 Python + 13 Node.
+
+
+### Desconexión por reescritura de controles · 2026-10-05
+
+GSI seguía recibiendo el estado del propio Invoker, pero el enlace estaba desarmado con «Las teclas de Dota cambiaron». El hash del archivo de controles difería del instalado, aunque Q/W/E/R, selección 2 y lanzamiento D/F seguían iguales. El historial anterior mostraba Tornado confirmado antes del bloqueo. Comparar todos los bytes trataba una reescritura ajena a esos controles como una modificación de entrada.
+
+La instalación registra ahora una firma de los controles efectivos: habilidades y variantes, selección, modos/modificadores, opciones por héroe y órdenes sobre teclas protegidas. Se ignoran formato, metadatos y controles ajenos; siguen bloqueándose modificaciones relevantes y colisiones nuevas. Las instalaciones antiguas mantienen el hash estricto hasta volver a instalar explícitamente. Se registró la firma local y se reinició el entrenador manteniendo URI/token GSI, sin modificar los controles físicos ni exigir reinicio de Dota. El enlace volvió a armarse y recibe estado reciente. La comprobación posterior con gestos se registra aparte cuando haya evidencia del juego.
+
+Suite: **114 Python + 13 Node**, todas correctas. Se añadieron regresiones para formato/metadatos y teclas ajenas permitidas, y para variante de lanzamiento, colisión, modo y override de Invoker bloqueados.

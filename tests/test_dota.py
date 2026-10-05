@@ -318,6 +318,40 @@ class DotaTests(unittest.TestCase):
     def test_binding_change_prevents_send(self):
         self.bindings.write_text(self.bindings.read_text().replace('"q"','"z"'))
         self.app.submit(self.event());self.app.tick();self.assertFalse(self.app.keyboard.events);self.assertEqual(self.app.last_action['status'],'cancelled')
+    def use_semantic_controls_check(self):
+        from jutsu_invoker.dota import controls_signature
+        self.app.config['controls_signature']=controls_signature(self.bindings)
+        self.app.config['bindings_sha256']=hashlib.sha256(self.bindings.read_bytes()).hexdigest()
+    def test_formatting_and_unrelated_metadata_do_not_disconnect(self):
+        self.use_semantic_controls_check()
+        self.bindings.write_text(self.bindings.read_text().replace('"KeyBindings" {','"KeyBindings" { "Name" "updated profile" "Version" "12"\n'))
+        self.confirm_on_invoke('Cold Snap');self.app.submit(self.event());self.app.tick()
+        self.assertTrue(self.app.armed);self.assertEqual(self.app.last_action['status'],'observed_in_gsi')
+    def test_unrelated_binding_does_not_disconnect(self):
+        self.use_semantic_controls_check()
+        self.bindings.write_text(self.bindings.read_text().replace('"Keys" {','"Keys" { "Inventory1" { "Key" "z" }'))
+        self.confirm_on_invoke('Cold Snap');self.app.submit(self.event());self.app.tick()
+        self.assertTrue(self.app.armed);self.assertEqual(self.app.last_action['status'],'observed_in_gsi')
+    def test_semantic_check_still_blocks_new_alternate_cast_on_orb_key(self):
+        self.use_semantic_controls_check()
+        self.bindings.write_text(self.bindings.read_text().replace('"Keys" {','"Keys" { "AbilitySecondary1QuickCast" { "Key" "q" "Mode" "0" }'))
+        self.app.submit(self.event());self.app.tick()
+        self.assertFalse(self.app.keyboard.events);self.assertFalse(self.app.armed)
+    def test_semantic_check_blocks_other_command_colliding_with_orb_key(self):
+        self.use_semantic_controls_check()
+        self.bindings.write_text(self.bindings.read_text().replace('"Keys" {','"Keys" { "Attack" { "Key" "q" }'))
+        self.app.submit(self.event());self.app.tick()
+        self.assertFalse(self.app.keyboard.events);self.assertFalse(self.app.armed)
+    def test_semantic_check_blocks_mode_change(self):
+        self.use_semantic_controls_check()
+        self.bindings.write_text(self.bindings.read_text().replace('"Key" "r"','"Key" "r" "Mode" "1"'))
+        self.app.submit(self.event());self.app.tick()
+        self.assertFalse(self.app.keyboard.events);self.assertFalse(self.app.armed)
+    def test_semantic_check_blocks_hero_override(self):
+        self.use_semantic_controls_check()
+        self.bindings.write_text(self.bindings.read_text().replace('"Keys" {','"UseHeroBindings" "1" "Units" { "npc_dota_hero_invoker" { "AbilityPrimary1" { "Key" "z" } } } "Keys" {'))
+        self.app.submit(self.event());self.app.tick()
+        self.assertFalse(self.app.keyboard.events);self.assertFalse(self.app.armed)
     def test_per_hero_units_overrides_are_checked_before_send(self):
         text=self.bindings.read_text()
         text=text.replace('"Keys" {','"UseHeroBindings" "1" "Units" { "npc_dota_hero_invoker" { "AbilityPrimary1" { "Key" "z" } } } "Keys" {')
