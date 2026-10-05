@@ -11,3 +11,14 @@
 .sound-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:18px;font-size:13px}.sound-controls button{font-size:13px}.sound-controls label{display:flex;align-items:center;gap:8px}.sound-controls input{width:110px;min-height:40px;accent-color:var(--r)}.sound-controls input:focus-visible{outline:2px solid var(--q);outline-offset:3px}.sound-controls output{min-width:4ch;font-variant-numeric:tabular-nums}.sound-controls>span{color:var(--muted)}
 
 .settings-panel{border-top:1px solid var(--line);padding:16px 0}.settings-panel>summary{font-weight:600}#settings-form>p,.advanced-settings>p{font-size:13px;color:var(--muted);max-width:70ch;margin-top:14px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;margin-top:18px}.settings-grid label{display:flex;flex-direction:column;gap:6px;font-size:13px;min-width:0}.settings-grid input:not([type=checkbox]),.settings-grid select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:7px;min-height:40px;padding:8px 10px;width:100%;font-variant-numeric:tabular-nums;caret-color:var(--q)}.settings-grid small{color:var(--muted);font-size:12px}.settings-grid input:focus-visible{outline:2px solid var(--q);outline-offset:3px}.settings-grid .setting-check{flex-direction:row;align-items:center;gap:9px;min-height:40px}.setting-check input{width:18px;height:18px;accent-color:var(--q)}.advanced-settings{margin-top:22px}.settings-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:20px}#settings-status{font-size:13px;color:var(--muted)}#settings-status[data-error=true]{color:var(--alert)}@media(max-width:600px){.settings-grid{grid-template-columns:1fr;gap:15px}.settings-actions button{flex:1}}
+
+/* OBS browser source: the camera and synchronized hand joints fill the frame. */
+#stream-badge{display:none}
+body.stream-overlay{margin:0;padding:0;max-width:none;width:100vw;height:100vh;overflow:hidden;background:transparent}
+.stream-overlay>header,.stream-overlay>footer,.stream-overlay>.recipes,.stream-overlay main>aside{display:none!important}
+.stream-overlay main{display:block;margin:0;width:100%;height:100%}
+.stream-overlay .workspace{width:100%;height:100%;position:relative}
+.stream-overlay .workspace>:not(.viewfinder){display:none!important}
+.stream-overlay .viewfinder{width:100%;height:100%;aspect-ratio:auto;border-radius:0;background:#111317}
+.stream-overlay .view-caption,.stream-overlay #trial-overlay{display:none!important}
+.stream-overlay #stream-badge{display:block;position:absolute;bottom:20px;left:20px;max-width:calc(100% - 40px);padding:8px 16px;border-left:4px solid #57e3e7;background:rgba(10,13,18,.8);color:#fff;font-size:30px;font-weight:600;border-radius:5px}

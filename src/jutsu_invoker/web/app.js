@@ -1,9 +1,11 @@
 const el = id => document.getElementById(id);
+const streamOverlay = new URLSearchParams(location.search).get('overlay') === '1';
+if(streamOverlay)document.body.classList.add('stream-overlay');
 const token = document.querySelector('meta[name=session-token]').content;
 const names = {monkey:'Mono',tiger:'Tigre',horse:'Caballo',snake:'Serpiente',unknown:'Sin sello',transition:'Transición',evaluation:'Evaluación guiada'};
 let soundStateSeen=false;
 const reasons = {low_confidence_or_margin:'La imagen todavía es ambigua. Mantén el sello dentro del encuadre.',unsupported_or_transition:'Forma mono, tigre o caballo. Serpiente confirma la receta.',confirmation_without_recipe:'Serpiente necesita una receta pendiente. Empieza con un elemento.',selector_already_selected:'Ese elemento ya está guardado. Continúa con otro sello o confirma con serpiente.',recipe_timeout:'La receta caducó. Empieza otra receta.',settings_changed:'Ajustes actualizados. Empieza una receta nueva.',observation_gap:'La imagen saltó. Mantén la pose; tus sellos siguen guardados durante el plazo de reinicio.',stale_or_nonvisual:'Imagen atrasada descartada. Tus sellos siguen guardados durante el plazo de reinicio.',camera_session_changed:'Nueva sesión de cámara.',camera_stopped:'Cámara detenida.',manual_cancel:'Receta cancelada.',dota_context_changed:'Cambió la disponibilidad de Dota. Empieza una receta nueva.',camera_or_gpu_error:'Se interrumpió el reconocedor.'};
-let evalModeRestored = false, jointsEnabled = localStorage.getItem('jutsu-joints-visible')==='true', videoPts = null, videoSeenAt = 0;
+let evalModeRestored = false, jointsEnabled = streamOverlay || localStorage.getItem('jutsu-joints-visible')==='true', videoPts = null, videoSeenAt = 0;
 let settingsDirty=false, settingsSignature=null, tokensSignature=null, historySignature=null;
 let frameIntervals=[], lastPreviewFrameAt=null, previewMeasureAt=null, previewFrames=0;
 function notePreviewFrame(now){
@@ -42,6 +44,10 @@ function render(data) {
   if(!soundStateSeen){sealSound.cursor.consume(audioEvents,Infinity);soundStateSeen=true;}
   else sealSound.consume(audioEvents,data.server_monotonic_ms,!!data.dota?.armed);
   state = data;
+  if(streamOverlay){
+    const badge=el('stream-badge');
+    badge.textContent=data.pending?.length ? data.pending.join(' · ') : data.last_recipe?.spell || 'Jutsu Invoker';
+  }
   renderSettings(data);
   reasons.recipe_timeout='Pasaron '+(data.settings?.timeout_ms/1000||data.thresholds?.timeout_ms/1000||1.6)+' s sin reconocer un elemento guardado ni aceptar uno nuevo. Empieza otra receta.';
   el('evaluation-note').textContent='Mantén cada sello hasta ver su letra. Tienes '+(data.settings?.timeout_ms/1000||1.6)+' s para cambiar de pose sin evidencia del elemento guardado. Serpiente confirma con '+(data.thresholds?.confirmation_observations||4)+' imágenes claras y al menos '+(data.thresholds?.confirmation_stable_ms||90)+' ms. 3,5 s para preparar cada intento. Los datos quedan en este PC.';
@@ -268,9 +274,9 @@ function drawJoints(){
   pose.hands.forEach((hand,i)=>{
     const color=i?'#f7b84b':'#57e3e7',p=hand.joints;
     const valid=k=>k.every(Number.isFinite)&&k[0]>=0&&k[0]<=pose.dimensions[0]&&k[1]>=0&&k[1]<=pose.dimensions[1]&&k[2]>.15;
-    ctx.lineWidth=3;
+    ctx.lineWidth=streamOverlay?7:3;
     for(const [a,b] of bones){if(!valid(p[a])||!valid(p[b]))continue;ctx.strokeStyle=Math.min(p[a][2],p[b][2])>=.5?color:'#a4a9ad';ctx.globalAlpha=Math.min(p[a][2],p[b][2])>=.5?.9:.35;ctx.beginPath();ctx.moveTo(p[a][0]*sx,p[a][1]*sy);ctx.lineTo(p[b][0]*sx,p[b][1]*sy);ctx.stroke();}
-    for(const k of p){if(!valid(k))continue;ctx.globalAlpha=k[2]>=.5?1:.4;ctx.fillStyle=k[2]>=.5?color:'#a4a9ad';ctx.beginPath();ctx.arc(k[0]*sx,k[1]*sy,4,0,2*Math.PI);ctx.fill();}
+    for(const k of p){if(!valid(k))continue;ctx.globalAlpha=k[2]>=.5?1:.4;ctx.fillStyle=k[2]>=.5?color:'#a4a9ad';ctx.beginPath();ctx.arc(k[0]*sx,k[1]*sy,streamOverlay?8:4,0,2*Math.PI);ctx.fill();}
     ctx.globalAlpha=1;
   });
 }
@@ -354,6 +360,9 @@ function soundState(){
 function soundError(error){el('sound-status').textContent=error.message+' Pulsa Activar sonido para reintentar.';}
 const sealSound=new SealSound(soundState);
 soundState();
+// OBS permits autoplay in its browser source. This separate audio source is
+// captured by OBS; the normal Chrome panel retains its click-to-enable flow.
+if(streamOverlay){sealSound.volume=100;sealSound.unlock().catch(soundError);}
 const sealStream=new EventSource('/api/seals');
 sealStream.addEventListener('seals',event=>{
   try{const data=JSON.parse(event.data);sealSound.cursor.initialized=true;sealSound.consume(data.events,data.server_monotonic_ms,data.dota_armed);}catch{/* State polling is the fallback. */}

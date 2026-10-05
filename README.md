@@ -120,6 +120,26 @@ GSI permite inferir el lanzamiento por el inicio de recarga o el gasto de una ca
 
 Los clips de audio se preparan localmente y no se incluyen en Git. [Procedencia y cortes](referencias/audio/PROVENANCE.md). Una vez preparados, no se descargan recursos externos durante el juego.
 
+## Directo con OBS
+
+Arranca el entrenador con `scripts/run_trainer.sh --camera back --dota`. En Chrome activa el sonido y la invocación. Los controles y el bloqueo del chat siguen siendo los mismos.
+
+En OBS añade una **Fuente de navegador** con `http://127.0.0.1:32147/?overlay=1`, tamaño 1280×720 y 30 FPS. Este modo muestra solo la cámara, las articulaciones y la receta; activa los efectos en el navegador de OBS. Marca **Controlar audio a través de OBS** y deja la monitorización desactivada: Chrome proporciona el feedback local del jugador y OBS lo incorpora al directo una sola vez. Puedes reducir el volumen de esa fuente desde el mezclador, sin cambiar el del jugador.
+
+En Hyprland, utiliza **Captura de pantalla (PipeWire)** para el juego y selecciona Dota en el diálogo del escritorio. Si seleccionas un monitor, la captura muestra lo que aparezca en ese monitor. Sitúa la cámara encima del juego en una esquina, conservando visibles el minimapa y las habilidades.
+
+Para capturar únicamente el audio del juego en PipeWire/PulseAudio:
+
+```bash
+.venv/bin/python scripts/stream_audio_router.py
+```
+
+El script crea `jutsu_dota_stream.monitor`, que debes elegir en una fuente de captura de salida de audio de OBS. Mantiene Dota audible en tu salida predeterminada y verifica el proceso antes de redirigirlo; las otras aplicaciones conservan su salida. Detén el script con Ctrl+C para restaurar Dota. Añade el micrófono por separado y desactiva la captura global de escritorio para evitar duplicados.
+
+En esta máquina quedó preparado el acceso **Jutsu Invoker · Directo** para abrir OBS y su servicio de audio. El perfil local usa cámara de 480×270 en la esquina superior derecha, captura PipeWire, micrófono G435 con reducción de ruido/compresor/limitador y H.264 NVENC a 1920×1080/60 FPS, CBR 6000 kbps, fotograma clave cada 2 s y AAC estéreo a 48 kHz/192 kbps. El servidor y la clave de Kick permanecen en la configuración privada de OBS, fuera de Git.
+
+Comprueba la vista previa y realiza una grabación local antes de pulsar **Iniciar transmisión**. Configurar el perfil o abrir OBS no inicia el directo.
+
 ## Pruebas y evaluación
 
 ```bash
@@ -133,7 +153,7 @@ scripts/run_tests.sh
 .venv/bin/python scripts/preflight.py --output runtime/preflight.json
 ```
 
-La suite verificada contiene **127 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
+La suite verificada contiene **131 pruebas Python y 13 Node**: recetas, estabilidad, cancelación, entrada manual, chat, identidad, cambios de sesión, controles efectivos, HTTP local, vídeo y audio sin duplicados. Las pruebas del núcleo no requieren GPU ni Dota; ejecutar todo requiere NumPy y los cinco WAV locales.
 
 En el panel, **Prueba de precisión** guía poses aisladas o las diez recetas. Los informes y grabaciones se guardan solo en `datos/evaluaciones/` y `datos/clips/`. Un informe es provisional hasta confirmar que se ejecutaron las poses, y necesita revisión del vídeo para una evaluación independiente.
 
