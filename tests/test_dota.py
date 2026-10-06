@@ -430,10 +430,48 @@ class DotaTests(unittest.TestCase):
         self.app.keyboard.hook=hook;self.app.submit(self.event());self.app.tick()
         self.assertNotIn(('f16',1),self.app.keyboard.events);self.assertFalse(self.app.armed)
         self.assertFalse(self.app.keyboard.down)
-    def test_no_confirmation_disarms_without_retry(self):
+    def test_no_confirmation_discards_attempt_without_disarming_or_retry(self):
         self.app.submit(self.event());self.app.tick();count=len(self.app.keyboard.events)
         self.advance(2);self.app.receive(self.payload);self.app.tick()
-        self.assertFalse(self.app.armed);self.assertEqual(self.app.last_action['status'],'unconfirmed');self.assertEqual(len(self.app.keyboard.events),count)
+        self.assertTrue(self.app.armed);self.assertEqual(self.app.last_action['status'],'unconfirmed');self.assertEqual(len(self.app.keyboard.events),count)
+        self.app.tick();self.assertEqual(len(self.app.keyboard.events),count)
+        self.assertIsNone(self.app.progress);self.assertTrue(self.app.pending.empty())
+        self.assertIsNone(self.app.problem)
+
+    def test_unconfirmed_attempt_invalidates_old_context_and_allows_fresh_recipe(self):
+        self.app.submit(self.event());self.app.tick()
+        stale=self.event('Ghost Walk','QQW')
+        epoch=self.app.context_generation
+        self.advance(2);self.app.receive(self.payload);self.app.tick()
+        self.assertGreater(self.app.context_generation,epoch)
+        count=len(self.app.keyboard.events)
+        self.app.submit(stale);self.app.tick();self.assertEqual(len(self.app.keyboard.events),count)
+        self.advance(.01);self.confirm_on_invoke('Ghost Walk')
+        self.app.submit(self.event('Ghost Walk','QQW'));self.app.tick()
+        self.assertEqual(self.app.last_action['status'],'observed_in_gsi')
+        self.assertTrue(self.app.armed)
+        self.assertEqual([k for k,v in self.app.keyboard.events[count:] if v],['f17','f13','f13','f14','f16'])
+
+    def test_late_confirmation_does_not_revive_or_replay_failed_attempt(self):
+        self.app.submit(self.event());self.app.tick();count=len(self.app.keyboard.events)
+        self.advance(2);self.app.receive(self.payload);self.app.tick()
+        p=deepcopy(self.payload);p['abilities']['ability3']['name']='invoker_cold_snap'
+        self.app.receive(p);self.app.tick()
+        self.assertEqual(self.app.last_action['status'],'unconfirmed')
+        self.assertEqual(len(self.app.keyboard.events),count)
+        self.assertEqual(list(self.app.prepared_events),[])
+        self.assertTrue(self.app.armed)
+
+    def test_unconfirmed_recovery_keeps_chat_guard_and_manual_disarm(self):
+        self.app.submit(self.event());self.app.tick()
+        self.advance(2);self.app.receive(self.payload);self.app.tick()
+        count=len(self.app.keyboard.events);self.app.input_guard.text_blocked=True
+        self.app.submit(self.event('Ghost Walk','QQW'));self.app.tick()
+        self.assertEqual(len(self.app.keyboard.events),count)
+        self.assertFalse(self.app.ready()[0]);self.assertTrue(self.app.armed)
+        self.app.disarm();self.app.input_guard.text_blocked=False
+        self.app.submit(self.event('Ghost Walk','QQW'));self.app.tick()
+        self.assertEqual(len(self.app.keyboard.events),count);self.assertFalse(self.app.armed)
     def test_spell_previously_in_other_slot_is_not_a_new_confirmation(self):
         p=deepcopy(self.payload);p['abilities']['ability4']['name']='invoker_cold_snap';self.app.receive(p)
         self.app.submit(self.event());self.app.tick();self.app.receive(p)

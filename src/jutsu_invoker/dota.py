@@ -540,7 +540,12 @@ class DotaIntegration:
             if active!=self.context_active:
                 self.context_active=active;self.cancel_pending('Cambió la disponibilidad de Dota')
             if self.last_action and self.last_action['status']=='sent_waiting_gsi' and now-self.last_action['sent_ms']>1500:
-                self.last_action['status']='unconfirmed';self.disarm('Invoke sin confirmación GSI; no se reintenta')
+                # Losing one acknowledgement must not permanently disable input.
+                # Discard its prefix and queued gestures; only fresh, newly
+                # authorized poses may start again. Never retry the old Invoke.
+                self.last_action.update(status='unconfirmed',reason='Dota no confirmó esta receta; empieza una nueva')
+                self.cancel_pending('Invoke sin confirmación GSI; no se reintenta')
+                return
             if not active:return
             try:event=self.pending.get_nowait()
             except queue.Empty:return
